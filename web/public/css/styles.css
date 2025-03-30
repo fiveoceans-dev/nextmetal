@@ -6,27 +6,18 @@ body {
     padding: 0;
     display: flex;
     flex-direction: column;
-    scrollbar-gutter: stable;
+    /* scrollbar-gutter: stable; */
 }
 
 body {
     flex: 1;
-    font-family: "Gowun Dodum", serif;
+    font-family: "Inter", sans-serif;
     font-size: 16px;
-    background-color: #f8f7f5;
-    color: #000;
+    background-color: #71797E;
+    color: #000000;
     text-align: center;
     /* overflow-y: scroll; */
 }
-
-.header-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-}
-
 
 /* Typography & Text Elements */
 p,
@@ -36,12 +27,14 @@ ul {
 }
 
 a {
-    color: #00f;
-    text-decoration: none;
+    font-family: Bangers, system-ui;
+    font-weight: 400;
+    font-style: normal;
+    color: #000000;
 }
 
 a:hover {
-    text-decoration: underline;
+    color: #cfcfcf;
 }
 
 b {
@@ -49,63 +42,64 @@ b {
     font-weight: bold;
 }
 
-small {
-    font-size: 14px;
+h1, h2, h3{
+    font-family: Bangers, system-ui;
+    font-weight: 400;
+    font-style: normal;
+    margin: 0;
+}
+
+h4, h5, h6 {
+    font-family: Inter, sans-serif;
+    margin: 0;
 }
 
 hr {
     border: 0;
-    border-top: 1px solid #ccc;
-    margin-top: 20px;
-    width: 640px;
+    border-top: 1px solid #cfcfcf;
 }
 
 .line {
     width: 640px;
     height: 1px;
-    background-color: #fdd401;
+    background-color: #cfcfcf;
 }
 
-.line-left-twocolumn {
-    width: 420px;
-    height: 1px;
-    background-color: #fdd401;
-}
 
 .content {
     display: flex;
     justify-content: space-between;
-    width: 640px;
     margin: 5px;
     padding: 5px;
     flex: 1;
 }
 
 /* Layout & Page Structure */
-.center-landing {
-    display: flex;
-    align-items: center;
-    height: 80vh;
+.center-column {
+    width: 100%;
     text-align: center;
+    margin: 0 5px;
 }
 
-.center-monocolumn {
-    width: 640px;
-    text-align: center;
-    margin: 0 auto;
-}
-
-.left-twocolumn {
-    width: 420px;
-    text-align: left;
-}
-
-.right-twocolumn {
+.left-column {
     width: 200px;
     text-align: justify;
-    font-size: 14px;
 }
 
+.right-column {
+    width: 200px;
+    text-align: justify;
+}
+
+.right-column a {
+    display: block;
+    text-align: right;
+}
+
+.left-column a {
+    display: block;
+    text-align: right;
+}
 /* Themes */
 
 /* Input Fields & Buttons */
@@ -159,7 +153,7 @@ input[type="submit"]:hover,
 .register-button {
     width: 100%;
     padding: 10px 20px;
-    background-color: #fdd401;
+    background-color: #cfcfcf;
     color: black;
     border: none;
     border-radius: 5px;
@@ -351,7 +345,8 @@ td {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    width: 840px;
+    width: 960px;
+    height: min-content;
     margin: 0 auto;
 }
 
@@ -360,8 +355,12 @@ td {
     height: auto;
 }
 
-.info-item {
-    width: 33%;
+.header-item {
+    width: 40%;
+}
+
+.header-logo {
+    width: 20%;
     text-align: center;
     margin: 20px;
 }
@@ -387,7 +386,7 @@ td {
 }
 
 .content-min-card:hover {
-    border: 1px solid #fdd401;
+    border: 1px solid #cfcfcf;
 }
 
 .content-min-card-title {
@@ -428,7 +427,7 @@ td {
 }
 
 .content-min-card-2:hover {
-    border: 1px solid #fdd401;
+    border: 1px solid #cfcfcf;
 }
 
 .content-min-card-2-title {
@@ -441,7 +440,7 @@ td {
 
 /* Focus Section */
 .focus-section {
-    border: 1px solid #fdd401;
+    border: 1px solid #cfcfcf;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
     padding: 6px 12px;
@@ -467,7 +466,7 @@ td {
 }
 
 .tab button.active {
-    background-color: #fdd401;
+    background-color: #cfcfcf;
 }
 
 .tabcontent {
@@ -489,7 +488,7 @@ td {
 /* Bordered Sections & Titles */
 .bordered-section,
 .bordered-section-gray {
-    border: 1px solid #fdd401;
+    border: 1px solid #cfcfcf;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -505,7 +504,7 @@ td {
     width: 100%;
     text-align: left;
     box-sizing: border-box;
-    background-color: #fdd401;
+    background-color: #cfcfcf;
 }
 
 .section-title-gray {
@@ -527,11 +526,6 @@ ul li {
     margin-bottom: 5px;
 }
 
-/* Right Column Text */
-.right-column p {
-    text-align: right;
-    margin-top: 10px;
-}
 
 /* Article & Registration */
 
