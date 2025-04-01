@@ -608,15 +608,15 @@ label {
         margin: 10px 0;
     }
     .links-section {
-        width: 100%;
-        padding: 0 20px;
+        width: auto;
+        padding: 10px 0;
     }
 }
 
 @media screen and (max-width: 640px) {
     .center-monocolumn {
-        width: 100%;
-        padding: 0 20px;
+        width: auto;
+        padding: 10px 0;
     }
 }
 
