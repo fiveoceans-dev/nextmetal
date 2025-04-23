@@ -285,8 +285,8 @@ input[type="submit"]:hover,
   scroll-snap-align: center;
   height: 100vh;
   max-width: 75%;
-  margin: 0 auto;               /* center horizontally */
-  padding: 2rem;
+  margin: 0 auto;
+  padding: 1rem;
   background: #000;
   color: #fff;
   box-sizing: border-box;
@@ -916,6 +916,9 @@ label {
     padding: 0.5rem;
   }
 
+  .landing-container {
+    max-width: 95%;
+  }
   /* Textarea: smaller min/max heights */
   .chat-bar textarea {
     min-height: 32px;
@@ -932,11 +935,6 @@ label {
   /* Bring chat history up so it’s not hidden behind the bar */
   #chatHistoryWrapper {
     margin-bottom: 60px; /* enough to clear the chat‐bar */
-  }
-
-  /* Hide the background video on small screens to save bandwidth */
-  #bgVideo {
-    display: none;
   }
 
   /* Dashboard elements (if any) stack vertically or disappear */
