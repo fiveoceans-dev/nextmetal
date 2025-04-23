@@ -61,7 +61,6 @@ router.get('/home', (req, res) => {
     });
 });
 
-
 // Route for the quick-start page
 router.get('/quick-start', (req, res) => {
     res.render('pages/quick-start', { 

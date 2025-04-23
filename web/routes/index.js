@@ -8,4 +8,10 @@ const router = express.Router();
 router.get('/main', (req, res) => {
     res.render('index-main');
 });
+
+router.get('/beta', (req, res) => {
+    res.render('beta');
+});
+
+
 module.exports = router;
