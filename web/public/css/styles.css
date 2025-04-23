@@ -403,6 +403,7 @@ input[type="submit"]:hover,
 .lightning-bolt:hover {
   transform: scale(1.2) rotate(-15deg);
 }
+
 /* Send Button styling */
 #button-send {
   width: 40px;
@@ -443,6 +444,13 @@ input[type="submit"]:hover,
   margin-right: 150px;
   border-left: 2px solid #f31895;
   background-color: #191919;
+}
+
+.chat-history .message.sent {
+  margin-left: 1rem;  /* instead of 150px */
+}
+.chat-history .message.received {
+  margin-right: 1rem; /* instead of 150px */
 }
 
 /* Dashboard */
@@ -870,7 +878,7 @@ label {
 }
 
 /* Mobile Responsiveness */
-@media screen and (max-width: 840px) {
+/* @media screen and (max-width: 840px) {
   .header-section {
     flex-direction: column;
     width: 100%;
@@ -892,5 +900,46 @@ label {
 @media screen and (max-width: 640px) {
   .center-monocolumn {
     width: 100%;
+  }
+} */
+
+/* 2. Shrink padding/font on tiny screens */
+@media (max-width: 600px) {
+  html, body {
+    font-size: 0.9rem;
+  }
+
+  /* Chat bar spans nearly 100% width */
+  .chat-bar {
+    width: calc(100% - 1rem);
+    padding: 0.5rem;
+  }
+
+  /* Textarea: smaller min/max heights */
+  .chat-bar textarea {
+    min-height: 32px;
+    max-height: 150px;
+    margin-right: 0.5rem;
+  }
+
+  /* Send button a bit smaller */
+  #button-send {
+    width: 32px;
+    height: 32px;
+  }
+
+  /* Bring chat history up so it’s not hidden behind the bar */
+  #chatHistoryWrapper {
+    margin-bottom: 60px; /* enough to clear the chat‐bar */
+  }
+
+  /* Hide the background video on small screens to save bandwidth */
+  #bgVideo {
+    display: none;
+  }
+
+  /* Dashboard elements (if any) stack vertically or disappear */
+  .dashboard-section {
+    display: none;
   }
 }
