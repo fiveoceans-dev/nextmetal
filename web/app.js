@@ -1,5 +1,4 @@
 // app.js
-
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
@@ -35,12 +34,10 @@ passport.use(new LocalStrategy(
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
       }
-
       const isMatch = await bcrypt.compare(password, user.password_hash);
       if (!isMatch) {
         return done(null, false, { message: 'Incorrect password.' });
       }
-
       return done(null, user);
     } catch (err) {
       return done(err);
@@ -48,7 +45,6 @@ passport.use(new LocalStrategy(
   }
 ));
 
-// Session management
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
@@ -75,7 +71,7 @@ app.use((req, res, next) => {
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Static files
+// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Import and use routes
@@ -83,11 +79,13 @@ const routes = require('./routes/index');
 const articleRoutes = require('./routes/articles');
 const pagesRoutes = require('./routes/pages');
 const authRoutes = require('./routes/auth');
+const apiRoutes = require('./routes/api');
 
 app.use('/', routes);
 app.use('/articles', articleRoutes);
 app.use('/', pagesRoutes);
 app.use('/auth', authRoutes);
+app.use('/api', apiRoutes);
 
 // 404 Error Handling
 app.use((req, res) => {

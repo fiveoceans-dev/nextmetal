@@ -1,0 +1,675 @@
+/* Global Styles & Base Layout */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    font-family: 'Inter', system-ui;
+    background: #1c1c1c;
+    color: #fff;
+    text-align: center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-direction: column;
+    scrollbar-gutter: stable;
+}
+
+.content {
+    padding: 5px;
+    margin: 0 auto;
+}
+
+/* Typography & Text Elements */
+p,
+ul {
+    margin: 0;
+    text-align: justify;
+}
+
+a {
+    font-family: Bangers, system-ui;
+    font-weight: 400;
+    font-style: normal;
+    color: #000000;
+}
+
+a:hover {
+    color: #cfcfcf;
+}
+
+b {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+h1,
+h2,
+h3 {
+    font-family: Bangers, system-ui;
+    font-weight: 400;
+    font-style: normal;
+    margin: 0;
+}
+
+h4,
+h5,
+h6 {
+    font-family: Inter, sans-serif;
+    margin: 0;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #cfcfcf;
+}
+
+.line {
+    width: 640px;
+    height: 1px;
+    background-color: #cfcfcf;
+}
+
+/* Layout & Page Structure */
+.center-column {
+    width: 100%;
+    text-align: center;
+    margin: 0 5px;
+}
+
+.left-column {
+    width: 200px;
+    text-align: justify;
+}
+
+.right-column {
+    width: 200px;
+    text-align: justify;
+}
+
+.right-column a {
+    display: block;
+    text-align: right;
+}
+
+.left-column a {
+    display: block;
+    text-align: right;
+}
+
+
+/* Themes */
+/* Metal */
+.metal-container {
+    display: flex;
+    border: 2px solid #fff;
+    border-radius: 8px;
+    padding: 2rem;
+    flex-direction: column;
+    height: 80vh;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.lightning-bolt {
+    width: 50px;
+    height: 50px;
+    fill: currentColor;
+    /* uses parent's text color (#fff) */
+    margin: 0 0.5rem;
+    transition: transform 0.3s ease;
+}
+
+.lightning-bolt:hover {
+    transform: scale(1.2) rotate(-15deg);
+}
+
+.icon-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Example button styling */
+.metal-btn {
+    display: inline-block;
+    background: #000;
+    color: #fff;
+    border: 2px solid #fff;
+    padding: 0.5rem 1rem;
+    margin-left: 5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-size: 1rem;
+    border-radius: 4px;
+    transition: background 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+
+.metal-btn:hover {
+    background: #fff;
+    color: #000;
+}
+
+/* Input Fields & Buttons */
+input[type="email"],
+input[type="password"],
+input[type="text"],
+select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #000;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="search"] {
+    width: 300px;
+    padding: 3px 8px;
+    border: 1px solid #fff;
+    box-sizing: border-box;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+textarea {
+    color: #fff;
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #fff;
+    border-radius: 4px;
+    background-color: #000;
+    box-sizing: border-box;
+    resize: none;
+    overflow: hidden;
+}
+
+input[type="submit"] {
+    padding: 3px 8px;
+    background-color: #000;
+    border: 1px solid #fff;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+input[type="submit"]:hover,
+.register-button:hover,
+.simple-btn:hover {
+    background-color: #000;
+}
+
+.search-bar {
+    margin-bottom: 10px;
+}
+
+.register-button {
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #cfcfcf;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.simple-btn {
+    margin-right: 5px;
+    padding: 5px;
+    background-color: #ddd;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-block;
+}
+
+/* Password Field */
+.password-field {
+    position: relative;
+    width: 100%;
+}
+
+.password-field input {
+    padding-right: 40px;
+}
+
+.password-field .password-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-field .password-button:focus {
+    outline: none;
+}
+
+/* Chat UI */
+.chat-container {
+    border: 1px solid #fff;
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chat-history {
+    flex: 1;
+    overflow-y: auto;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.fill-space {
+    flex: 1;
+    padding: 10px;
+}
+
+.chat-bar {
+    display: flex;
+}
+
+/* Chat Messages */
+.message {
+    margin-bottom: 10px;
+    padding: 2px;
+    border-radius: 2px;
+    max-width: 90%;
+    word-wrap: break-word;
+}
+
+.message.sent {
+    background-color: #6aa3ff;
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.message.received {
+    background-color: #aaaaaa;
+    align-self: flex-start;
+}
+
+/* Tables & Tooltips */
+table {
+    font-size: 14px;
+    width: relative;
+    border-collapse: separate;
+    border-spacing: 2px;
+    box-sizing: border-box;
+    border: 1px solid #c5c5c5;
+}
+
+thead {
+    background-color: #e0e0e0;
+    font-weight: bold;
+}
+
+tbody {
+    background-color: #fff;
+}
+
+tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+td {
+    padding: 2px;
+    text-align: left;
+}
+
+/* Tooltips */
+.tooltip {
+    position: relative;
+    cursor: pointer;
+}
+
+.tooltip .tooltip-text {
+    visibility: hidden;
+    width: auto;
+    background-color: black;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Status Indicators */
+.online {
+    color: green;
+}
+
+.joining {
+    color: orange;
+}
+
+.unreachable {
+    color: red;
+}
+
+.offline {
+    color: gray;
+}
+
+/* Dashboard */
+.dashboard-section {
+    font-size: x-small;
+    color: #ccc;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 0 auto;
+}
+
+.dashboard-item {
+    width: 20%;
+    text-align: center;
+    margin: 2px;
+}
+
+/* Content Cards, Grids & Sections */
+.header-section {
+    font-size: medium;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    width: auto;
+    height: min-content;
+    margin: 0 auto;
+}
+
+.header-section img {
+    max-width: 100%;
+    height: auto;
+}
+
+.header-item {
+    width: 40%;
+}
+
+.header-logo {
+    width: 50%;
+    height: auto;
+    margin: 5px;
+}
+
+.links-section {
+    font-size: small;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    width: 840px;
+    margin: 0 auto;
+}
+
+/* Content Cards */
+.content-min-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #c5c5c5;
+    height: 200px;
+    overflow: hidden;
+}
+
+.content-min-card:hover {
+    border: 1px solid #cfcfcf;
+}
+
+.content-min-card-title {
+    font-weight: bold;
+}
+
+.content-min-card-info {
+    margin-top: auto;
+    text-align: left;
+}
+
+/* Two Column Grid for Cards */
+.content-min-2,
+.focus-grid {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* Three Column Grid */
+.content-min-3 {
+    display: grid;
+    gap: 10px;
+    margin: 5px;
+    padding: 5px;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* Alternative Card Style */
+.content-min-card-2 {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #c5c5c5;
+    height: 250px;
+    overflow: hidden;
+}
+
+.content-min-card-2:hover {
+    border: 1px solid #cfcfcf;
+}
+
+.content-min-card-2-title {
+    font-weight: bold;
+}
+
+.content-min-card-2-info {
+    text-align: left;
+}
+
+/* Focus Section */
+.focus-section {
+    border: 1px solid #cfcfcf;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 6px 12px;
+}
+
+/* Tabs & Categories */
+.tab {
+    overflow: hidden;
+}
+
+.tab button {
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 5px;
+    background-color: #ccc;
+    transition: 0.3s;
+}
+
+.tab button:hover {
+    background-color: #ddd;
+}
+
+.tab button.active {
+    background-color: #cfcfcf;
+}
+
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border-top: none;
+}
+
+.categories {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.category-column {
+    width: 48%;
+}
+
+/* Bordered Sections & Titles */
+.bordered-section,
+.bordered-section-gray {
+    border: 1px solid #cfcfcf;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bordered-section-gray {
+    border-color: #c5c5c5;
+}
+
+.section-title,
+.section-title-gray {
+    padding: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    width: 100%;
+    text-align: left;
+    box-sizing: border-box;
+    background-color: #cfcfcf;
+}
+
+.section-title-gray {
+    background-color: #c5c5c5;
+}
+
+.section-title-text {
+    padding: 5px;
+}
+
+/* Lists */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+/* Article & Registration */
+
+.article-content {
+    margin: 5px;
+    padding: 5px;
+    height: 800px;
+}
+
+.article-image-left img,
+.article-image-right img {
+    border-radius: 5px;
+}
+
+.article-image-left img {
+    float: left;
+    margin: 10px 10px 10px 0;
+}
+
+.article-image-right img {
+    float: right;
+    margin: 10px 0 10px 10px;
+}
+
+/* Registration Form */
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    width: 100%;
+}
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.registration-form {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+    position: relative;
+}
+
+/* Footer */
+.footer {
+    margin-top: auto;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 12px;
+    width: 100%;
+}
+
+
+/* Mobile responsiveness */
+@media screen and (max-width: 840px) {
+    .header-section {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .info-item {
+        width: auto;
+        margin: 10px 0;
+    }
+
+    .dashboard-section {
+        width: 100%;
+    }
+
+    .dashboard-item {
+        width: auto;
+        margin: 10px 0;
+    }
+
+    .links-section {
+        width: auto;
+        padding: 10px 0;
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .center-monocolumn {
+        width: auto;
+        padding: 10px 0;
+    }
+}

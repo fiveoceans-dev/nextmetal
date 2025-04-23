@@ -1,0 +1,41 @@
+<%# pages/account.ejs %>
+
+<%- include('../layout', {
+    title: 'Next Metal - Account Page',
+    description: 'Members Only Account Page',
+    body: `
+      <main class="center-monocolumn account-page">
+        <div class="line"></div>
+        <h1>Welcome, ${user.email}!</h1>
+        <p class="account-intro">This is the members-only account page.</p>
+    
+        <section class="account-cards">
+          <!-- Hardware Card -->
+          <article class="account-card">
+            <header class="account-card__header">
+              <h3>Hardware</h3>
+            </header>
+            <div class="account-card__body">
+              <img src="https://placehold.co/431x220.png" alt="Nodes overview">
+              <p>Status:</p>
+              <p><span class="status__online">● Online</span></p>
+            </div>
+          </article>
+    
+          <!-- Points Card -->
+          <article class="account-card">
+            <header class="account-card__header">
+              <h3>Points</h3>
+            </header>
+            <div class="account-card__body">
+              <img src="https://placehold.co/431x220.png" alt="Profits overview">
+              <p>Available: <strong>1234</strong></p>
+              <p>Price: <strong>$56.78</strong></p>
+              <button class="simple-btn account-card__button">Withdraw</button>
+            </div>
+          </article>
+        </section>
+      </main>
+    `
+  }) %>
+  

@@ -1,0 +1,56 @@
+<%# pages/download-page.ejs %>
+
+<%- include('../layout', { 
+    title: 'Next Metal - Download', 
+    description: ' ',
+    body: `
+
+    <main class="center-monocolumn">
+        <div class="line"></div>
+        <h1>Download Next Metal Client</h1>
+        <p>Multi-platform, easy-to-use client. Please install Docker and ensure it is running. You can select what containers you want to run on your computer. We highly recommend you run one or two containers and add more containers later to increase profitability.</p>
+        <br>
+
+        <!-- Tabs Section -->
+        <div class="bordered-section">
+            <div class="tab">
+                <button class="tablinks active" onclick="openCity(event, 'Windows')">Windows</button>
+                <button class="tablinks" onclick="openCity(event, 'macOS')">macOS</button>
+                <button class="tablinks" onclick="openCity(event, 'Linux')">Linux</button>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tabcontent-container">
+                <div id="Windows" class="tabcontent" style="display:block;">
+                    <img src="https://placehold.co/614x150.png" width="614" height="150" alt="Windows">
+                    <p>Windows, easy-to-use client. Please install Docker and ensure it is running. You can select what containers you want to run on your computer. We highly recommend you run one or two containers and add more containers later to increase profitability.</p>
+                </div>
+                <div id="macOS" class="tabcontent">
+                    <img src="https://placehold.co/614x150.png" width="614" height="150" alt="macOS">
+                    <p>macOS, easy-to-use client. Please install Docker and ensure it is running. You can select what containers you want to run on your computer. We highly recommend you run one or two containers and add more containers later to increase profitability.</p>
+                </div>
+                <div id="Linux" class="tabcontent">
+                    <img src="https://placehold.co/614x150.png" width="614" height="150" alt="Linux">
+                    <p>Linux, easy-to-use client. Please install Docker and ensure it is running. You can select what containers you want to run on your computer. We highly recommend you run one or two containers and add more containers later to increase profitability.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        function openCity(evt, cityName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
+
+    `
+}) %>

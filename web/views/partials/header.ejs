@@ -1,20 +1,25 @@
 <%# // partials/header.ejs %>
-<!-- Message Section -->
+<!-- Header Section -->
+
 <div class="header-section">
-    <!-- <div class="header-item">
-        <h2>
-            <a href="/">Item 1</a> ·
-            <a href="/">Item 2</a>
-        </h2>
-    </div> -->
-    <div class="header-logo">
-        <!-- Logo and Header -->
-        <a href="/"><img width="70px" src="/images/logo.svg" alt="Acorn SH Logo"></a>
+    <div class="info-item">
+        <a href="/download-page">download metal</a><br>macOS, Windows, Linux
     </div>
-    <!-- <div class="header-item">
-        <h2>
-            <a href="/">Item 1</a> ·
-            <a href="/">Item 2</a>
-        </h2>
-    </div> -->
+    <div class="logo">
+        <a href="/"><img src="/images/nextmetal.svg" alt="Next Metal"></a>
+    </div>
+    <div class="info-item">
+        <% if (user) { %>
+            <a href="/account">my account</a> · <a href="/auth/logout">logout</a>
+            <br>members only
+        <% } else { %>
+            <a href="/members">log in/sign up</a><br>join the waitlist
+        <% } %>
+    </div>
+</div>
+
+<div class="links-section">
+    <a href="/home#section1">Vision</a> ·
+    <a href="/">Next Metal</a> ·
+    <a href="/careers">Careers</a>
 </div>

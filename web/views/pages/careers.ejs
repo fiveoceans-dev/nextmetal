@@ -1,0 +1,110 @@
+<%# pages/careers.ejs %>
+
+<%- include('../layout',{
+  title: 'Next Metal - Careers',
+  description: 'Join our team of innovators building blockchain-powered AI infrastructure for the future.',
+  body: `
+    <main class="center-monocolumn careers-page">
+      <div class="line"></div>
+
+      <h1>Careers at Next Metal</h1>
+      <p class="intro">
+        At Next Metal, we are building a democratized, blockchain-powered AI infrastructure.
+        Our mission is to empower people by reinventing ownership of AI—its development and deployment.
+        Join us as we innovate, collaborate, and redefine the future.
+      </p>
+
+      <section>
+        <div class="careers-grid">
+          <div class="career-card">
+            <h3>Engineering &amp; Development</h3>
+            <p>
+              Build and maintain our decentralized infrastructure—blockchain protocols,
+              distributed systems, and AI integrations.
+            </p>
+            <a href="/careers/engineering" class="metal-btn">Apply</a>
+          </div>
+          <div class="career-card">
+            <h3>Research &amp; Innovation</h3>
+            <p>
+              Push the boundaries of AI algorithms and emerging tech to keep us at
+              the forefront of industry innovation.
+            </p>
+            <a href="/careers/research" class="metal-btn">Apply</a>
+          </div>
+          <div class="career-card">
+            <h3>Product &amp; Design</h3>
+            <p>
+              Craft intuitive, user-centric interfaces that make our
+              cutting-edge technology accessible to everyone.
+            </p>
+            <a href="/careers/product" class="metal-btn">Apply</a>
+          </div>
+          <div class="career-card">
+            <h3>Operations &amp; Security</h3>
+            <p>
+              Ensure high availability, secure deployments, and smooth scaling
+              of our global AI network.
+            </p>
+            <a href="/careers/ops" class="metal-btn">Apply</a>
+          </div>
+          <div class="career-card">
+            <h3>Sales, Marketing &amp; Partnerships</h3>
+            <p>
+              Drive brand awareness, forge strategic alliances, and connect us
+              with customers worldwide.
+            </p>
+            <a href="/careers/marketing" class="metal-btn">Apply</a>
+          </div>
+        </div>
+      </section>
+
+      <div class="line"></div>
+
+      <section class="why-join">
+        <h1>Why Join Us?</h1>
+        <p>
+          At Next Metal, you're not just working for a company—you're joining a movement.
+          Enjoy a dynamic, collaborative environment, endless opportunities for
+          professional growth, and the satisfaction of helping reshape the future
+          of AI with blockchain technology.
+        </p>
+        <div class="line"></div>
+        <h1>Our Team</h1>
+        <div class="careers-grid">
+          <div class="career-card">
+            <img src="/images/five.jpg" alt="Engineering Team">
+            <h3>AI lord / co-Founder</h3>
+
+            <p>
+              Ph.D. in AI, 10+ years of experience in the field, and a passion for
+              pushing the boundaries of whats possible with AI.
+              
+            </p>
+          </div>
+          <div class="career-card">
+            <img src="/images/levx.jpg" alt="Engineering Team">
+            <h3>Crypto czar / co-Founder</h3>
+
+            <p>
+              12+ years of experience in the crypto space, with a deep understanding
+              of blockchain technology, EVM, and its applications.
+              
+            </p>
+          </div>
+          <div class="career-card">
+            <img src="/images/park.jpg" alt="Engineering Team">
+            <h3>Software Engineer</h3>
+
+            <p>
+              5+ years of experience in software development, with a focus on
+              building scalable and efficient systems.
+              
+            </p>
+          </div>
+        </div>
+
+      </section>
+    </main>
+  `
+}) %>
