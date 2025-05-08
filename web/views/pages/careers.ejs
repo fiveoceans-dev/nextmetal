@@ -1,110 +1,331 @@
 <%# pages/careers.ejs %>
 
-<%- include('../layout',{
-  title: 'Next Metal - Careers',
-  description: 'Join our team of innovators building blockchain-powered AI infrastructure for the future.',
-  body: `
+  <%- include('../layout',{ title: 'Next Metal - Careers' ,
+    description: 'Join our team of innovators building blockchain-powered AI infrastructure for the future.' , body: `
     <main class="center-monocolumn careers-page">
-      <div class="line"></div>
-
-      <h1>Careers at Next Metal</h1>
-      <p class="intro">
-        At Next Metal, we are building a democratized, blockchain-powered AI infrastructure.
-        Our mission is to empower people by reinventing ownership of AI—its development and deployment.
-        Join us as we innovate, collaborate, and redefine the future.
-      </p>
-
-      <section>
-        <div class="careers-grid">
-          <div class="career-card">
-            <h3>Engineering &amp; Development</h3>
-            <p>
-              Build and maintain our decentralized infrastructure—blockchain protocols,
-              distributed systems, and AI integrations.
-            </p>
-            <a href="/careers/engineering" class="metal-btn">Apply</a>
-          </div>
-          <div class="career-card">
-            <h3>Research &amp; Innovation</h3>
-            <p>
-              Push the boundaries of AI algorithms and emerging tech to keep us at
-              the forefront of industry innovation.
-            </p>
-            <a href="/careers/research" class="metal-btn">Apply</a>
-          </div>
-          <div class="career-card">
-            <h3>Product &amp; Design</h3>
-            <p>
-              Craft intuitive, user-centric interfaces that make our
-              cutting-edge technology accessible to everyone.
-            </p>
-            <a href="/careers/product" class="metal-btn">Apply</a>
-          </div>
-          <div class="career-card">
-            <h3>Operations &amp; Security</h3>
-            <p>
-              Ensure high availability, secure deployments, and smooth scaling
-              of our global AI network.
-            </p>
-            <a href="/careers/ops" class="metal-btn">Apply</a>
-          </div>
-          <div class="career-card">
-            <h3>Sales, Marketing &amp; Partnerships</h3>
-            <p>
-              Drive brand awareness, forge strategic alliances, and connect us
-              with customers worldwide.
-            </p>
-            <a href="/careers/marketing" class="metal-btn">Apply</a>
-          </div>
-        </div>
-      </section>
-
-      <div class="line"></div>
-
-      <section class="why-join">
-        <h1>Why Join Us?</h1>
-        <p>
-          At Next Metal, you're not just working for a company—you're joining a movement.
-          Enjoy a dynamic, collaborative environment, endless opportunities for
-          professional growth, and the satisfaction of helping reshape the future
-          of AI with blockchain technology.
+    <div class="line"></div>    
+    <div class="two-col-container" id="why-join">
+      <div class="text-wrap">
+        <!-- Your floating images and paragraphs before the card -->
+        <img class="float-left" src="/images/nextmetal_.jpg" style="width: 500px;" alt="Left icon">
+        
+        <h1>Careers at Next Metal</h1>
+        <p class="intro">
+          Next Metal is democratizing AI by fusing it with secure, blockchain-powered infrastructure.
+          We empower individuals to own, build, and deploy AI at scale—together.
+          If you thrive in a fast-paced, mission-driven culture where every voice matters, you belong here.
         </p>
-        <div class="line"></div>
-        <h1>Our Team</h1>
-        <div class="careers-grid">
-          <div class="career-card">
-            <img src="/images/five.jpg" alt="Engineering Team">
-            <h3>AI lord / co-Founder</h3>
+        <h2>Why Next Metal?</h2>
+        <p>
+          Joining Next Metal means more than a job—you become part of a movement to decentralize AI.
+          You'll work alongside passionate experts, enjoy limitless opportunities for growth, and share in the company's
+          success.
+        </p>
+        <p>
+          As an early team member, you'll have outsized impact, equity upside, and direct influence on our roadmap.
+          We seek creative problem-solvers who care deeply about open-source, fairness, and pushing technology forward.
+        </p>
 
-            <p>
-              Ph.D. in AI, 10+ years of experience in the field, and a passion for
-              pushing the boundaries of whats possible with AI.
-              
-            </p>
-          </div>
-          <div class="career-card">
-            <img src="/images/levx.jpg" alt="Engineering Team">
-            <h3>Crypto czar / co-Founder</h3>
+      </div>
+      </div>
 
-            <p>
-              12+ years of experience in the crypto space, with a deep understanding
-              of blockchain technology, EVM, and its applications.
-              
-            </p>
-          </div>
-          <div class="career-card">
-            <img src="/images/park.jpg" alt="Engineering Team">
-            <h3>Software Engineer</h3>
 
-            <p>
-              5+ years of experience in software development, with a focus on
-              building scalable and efficient systems.
-              
-            </p>
-          </div>
+
+    <div class="line"></div>
+
+    <!-- Careers -->
+
+    <section class="why-join">
+      <h2>Open Roles</h2>
+      <div class="roles-list">
+
+        <!-- AI Research & Engineering -->
+        <div class="department">
+          <h3>AI Research &amp; Engineering</h3>
+          <ul class="positions">
+
+            <li class="role-item">
+              <span class="role-title">Senior AI Engineer</span>
+              <span class="role-desc">
+                Own end-to-end lifecycle of large-scale ML systems in a decentralized environment.
+              </span>
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSfSv4hvA9bdlWat-YcyWUUEdTZp3PCd_0svhU_888ezlq52mQ/formResponse"
+                target="_blank" class="metal-btn">Apply</a>
+
+              <div class="role-full">
+                <h4>Responsibilities:</h4>
+                <p>
+                  Lead design, training, fine-tuning and deployment of cutting-edge models.
+                  Define architecture standards and best practices for model governance.
+                  Mentor junior engineers and collaborate closely with protocol and platform teams.
+                  Optimize performance for distributed, peer-to-peer inferencing workloads.
+                </p>
+
+                <h4>Requirements:</h4>
+                <p>
+                  5+ years in AI/ML engineering, ideally at scale.
+                  Expertise with TensorFlow, PyTorch or equivalent frameworks.
+                  Proven track record deploying models in production environments.
+                  Familiarity with decentralized systems, blockchain protocols a plus.
+                  Excellent communication, leadership and problem-solving skills.
+                </p>
+              </div>
+            </li>
+
+            <li class="role-item">
+              <span class="role-title">Research Scientist</span>
+              <span class="role-desc">
+                Drive breakthrough ML research and translate prototypes into production.
+              </span>
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSfSv4hvA9bdlWat-YcyWUUEdTZp3PCd_0svhU_888ezlq52mQ/formResponse"
+                target="_blank" class="metal-btn">Apply</a>
+
+              <div class="role-full">
+                <h4>Responsibilities:</h4>
+                <p>
+                  Advocate and publish novel ML architectures in top-tier venues.
+                  Prototype algorithms for decentralized AI orchestration.
+                  Collaborate with engineering to productionize research prototypes.
+                  Represent Next Metal at conferences, workshops and online forums.
+                </p>
+
+                <h4>Requirements:</h4>
+                <p>
+                  PhD in Machine Learning, Computer Science or related field.
+                  Strong publication record in leading journals or conferences.
+                  Hands-on experience with deep learning toolkits (TensorFlow, PyTorch).
+                  Understanding of distributed systems and blockchain integration.
+                  Excellent written and verbal communication skills.
+                </p>
+              </div>
+            </li>
+          </ul>
         </div>
 
-      </section>
+        <!-- Blockchain Development -->
+        <div class="department">
+          <h3>Blockchain Development</h3>
+          <ul class="positions">
+
+            <li class="role-item">
+              <span class="role-title">Smart-Contract Developer</span>
+              <span class="role-desc">
+                Architect, audit and deploy high-security smart contracts in Solidity & Rust.
+              </span>
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSfSv4hvA9bdlWat-YcyWUUEdTZp3PCd_0svhU_888ezlq52mQ/formResponse"
+                target="_blank" class="metal-btn">Apply</a>
+
+              <div class="role-full">
+                <h4>Responsibilities:</h4>
+                <p>
+                  Design and implement modular, upgradeable contracts.
+                  Perform rigorous security audits and formal verifications.
+                  Collaborate with protocol engineers to integrate chain logic.
+                  Write comprehensive test suites and maintain CI pipelines.
+                </p>
+
+                <h4>Requirements:</h4>
+                <p>
+                  3+ years in smart-contract development (Solidity, Rust).
+                  Deep understanding of EVM, WASM and other chain VM internals.
+                  Experience on Ethereum and at least one other blockchain.
+                  Strong focus on security, gas optimization and best practices.
+                  Demonstrated ability to work in fast-paced, cross-functional teams.
+                </p>
+              </div>
+            </li>
+
+            <li class="role-item">
+              <span class="role-title">Protocol Engineer</span>
+              <span class="role-desc">
+                Design and optimize consensus protocols for performance and decentralization.
+              </span>
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSfSv4hvA9bdlWat-YcyWUUEdTZp3PCd_0svhU_888ezlq52mQ/formResponse"
+                target="_blank" class="metal-btn">Apply</a>
+
+              <div class="role-full">
+                <h4>Responsibilities:</h4>
+                <p>
+                  Architect consensus and networking layers for robust throughput.
+                  Benchmark and tune protocol parameters under real-world conditions.
+                  Collaborate on cross-chain and interoperability initiatives.
+                  Maintain high availability and resilience SLAs.
+                </p>
+
+                <h4>Requirements:</h4>
+                <p>
+                  5+ years in blockchain protocol design & development.
+                  Expertise in consensus algorithms (PoS, DAGs, BFT variants).
+                  Strong systems programming skills (Go, Rust, C++).
+                  Experience with distributed databases and P2P networks.
+                  Excellent analytical, troubleshooting and communication skills.
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Cloud & Infrastructure -->
+        <div class="department">
+          <h3>Cloud &amp; Infrastructure</h3>
+          <ul class="positions">
+
+            <li class="role-item">
+              <span class="role-title">Infrastructure Architect</span>
+              <span class="role-desc">
+                Build and maintain our peer-to-peer GPU cloud for industry-leading uptime.
+              </span>
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSfSv4hvA9bdlWat-YcyWUUEdTZp3PCd_0svhU_888ezlq52mQ/formResponse"
+                target="_blank" class="metal-btn">Apply</a>
+
+              <div class="role-full">
+                <h4>Responsibilities:</h4>
+                <p>
+                  Design scalable, fault-tolerant GPU clusters on AWS/GCP/Azure.
+                  Implement container orchestration (Kubernetes, Nomad, etc.).
+                  Monitor performance, automate fail-over and capacity planning.
+                  Ensure security compliance across the infrastructure stack.
+                </p>
+
+                <h4>Requirements:</h4>
+                <p>
+                  5+ years in cloud architecture and operations.
+                  Proficiency with IaC tools (Terraform, Pulumi).
+                  Deep knowledge of Docker, Kubernetes or similar platforms.
+                  Experience integrating on-chain and off-chain systems.
+                  Strong communication and teamwork skills.
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Business & Marketing -->
+        <div class="department">
+          <h3>Business &amp; Marketing</h3>
+          <ul class="positions">
+
+            <li class="role-item">
+              <span class="role-title">Growth Marketing Lead</span>
+              <span class="role-desc">
+                Own user-acquisition strategy and drive growth across digital channels.
+              </span>
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSfSv4hvA9bdlWat-YcyWUUEdTZp3PCd_0svhU_888ezlq52mQ/formResponse"
+                target="_blank" class="metal-btn">Apply</a>
+
+              <div class="role-full">
+                <h4>Responsibilities:</h4>
+                <p>
+                  ]Develop and optimize multi-channel marketing campaigns.
+                  Analyze performance data and pivot strategies in real time.
+                  Collaborate with product to align messaging and positioning.
+                  Lead A/B testing and growth-hacking experiments.
+                </p>
+
+                <h4>Requirements:</h4>
+                <p>
+                  5+ years in growth or digital marketing, preferably in tech.
+                  Proven track record scaling user-acquisition funnels.
+                  Strong SQL/data-analysis skills (Mixpanel, Google Analytics).
+                  Excellent communication and cross-functional collaboration.
+                  Passion for AI, blockchain and decentralized technologies.
+                </p>
+              </div>
+            </li>
+
+            <li class="role-item">
+              <span class="role-title">Partnerships Manager</span>
+              <span class="role-desc">
+                Establish and nurture strategic alliances across Web3 and enterprise.
+              </span>
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSfSv4hvA9bdlWat-YcyWUUEdTZp3PCd_0svhU_888ezlq52mQ/formResponse"
+                target="_blank" class="metal-btn">Apply</a>
+
+              <div class="role-full">
+                <h4>Responsibilities:</h4>
+                <p>
+                  Identify and negotiate high-value partnerships.
+                  Develop joint offerings with ecosystem partners.
+                  Track and report on partnership performance metrics.
+                  Represent Next Metal at industry events and conferences.
+                </p>
+
+                <h4>Requirements:</h4>
+                <p>
+                  3+ years in business development or strategic partnerships.
+                  Strong network in blockchain/Web3 or enterprise sectors.
+                  Excellent negotiation, presentation and relationship-building skills.
+                  Self-starter who thrives in fast-moving environments.
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="why-join">
+      <h2>Meet Our Team</h2>
+      <div class="careers-grid">
+        <div class="career-card">
+          <img src="/images/five.jpg" alt="Five">
+          <a href="https://x.com/fiveoceans_dev" target="_blank">
+            <h3>Five</h3>
+          </a>
+          <h4>AI Lord & Founder</h4>
+          <p>
+            12+ years of experience in AI, specializing in large-scale model training and deployment.
+          </p>
+        </div>
+        <div class="career-card">
+          <img src="/images/levx.jpg" alt="LevX">
+          <a href="https://x.com/levx_me" target="_blank">
+            <h3>LevX</h3>
+          </a>
+          <h4>Crypto czar</h4>
+          <p>
+            12+ years of blockchain architecture experience, building resilient, permissionless networks.
+          </p>
+        </div>
+        <div class="career-card">
+          <img src="/images/member.jpg" alt="Paak">
+          <h3>DK Jang</h3>
+          <h4>Lead Cloud Engineer</h4>
+          <p>
+            5+ years crafting scalable, high-performance systems for global platforms.
+          </p>
+        </div>
+        <div class="career-card">
+          <img src="/images/member.jpg" alt="Paak">
+          <h3>A Park</h3>
+          <h4>Senior Software Developer</h4>
+          <p>
+            7+ years high-performance software development, specializing in distributed systems.
+          </p>
+        </div>
+        <div class="career-card">
+          <img src="/images/member.jpg" alt="Paak">
+          <h3>Roman</h3>
+          <h4>Product Lead</h4>
+          <p>
+            7+ years in product management, driving user-centric design and innovation.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      document.querySelectorAll('.role-item').forEach(item => {
+        item.addEventListener('click', e => {
+          // don't expand if the click was on the Apply button:
+          if (e.target.closest('.metal-btn')) return;
+          item.classList.toggle('expanded');
+        });
+      });
+    </script>
+
+
     </main>
-  `
-}) %>
+    `
+    }) %>

@@ -1,0 +1,80 @@
+<%# pages/careers-form.ejs %>
+
+<%- include('../layout', {
+  title: 'Next Metal - Apply',
+  description: 'Send us your application',
+  body: `
+    <main class="form-container">
+      <form 
+        class="careers-form-card"
+        action="https://docs.google.com/forms/d/e/1FAIpQLSfSv4hvA9bdlWat-YcyWUUEdTZp3PCd_0svhU_888ezlq52mQ/formResponse"
+        method="post"
+        target="_blank"
+        enctype="text/plain"
+      >
+        <h1>Apply for a Career at Next Metal</h1>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label for="position">Position Applied For</label>
+            <input type="text" id="position" name="Position" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="location">Preferred Location</label>
+            <select id="location" name="Location" required>
+              <option value="">Select location…</option>
+              <option>Seoul</option>
+              <option>Remote</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="Full Name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="Email" required>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="Phone" required>
+          </div>
+
+          <div class="form-group">
+            <label for="linkedin">SNS Profile</label>
+            <input type="url" id="linkedin" name="LinkedIn" placeholder="Twitter, Github etc.">
+          </div>
+
+          <div class="form-group">
+            <label for="address">Postal Address</label>
+            <input type="text" id="address" name="Address" required>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="coverLetter">Cover Letter</label>
+            <textarea id="coverLetter" name="Cover Letter" rows="6" required></textarea>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="cv">Attach Your CV (PDF)</label>
+            <input type="file" id="cv" name="CV" accept=".pdf">
+            <small>Please attach your CV. The file name should be cv_Full_Name_Position.pdf</small>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">Submit Application</button>
+      </form>
+    </main>
+
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const pos = params.get('role');
+      if (pos) document.getElementById('position').value = decodeURIComponent(pos);
+    </script>
+  `
+}) %>

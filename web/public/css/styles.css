@@ -344,31 +344,37 @@ input[type="submit"]:hover,
   padding: 2rem;
   background: rgba(0,0,0,0.85);
   border: 2px solid #fff;
-  border-radius: 8px;
+  border-radius: 5px;
   text-align: center;
   z-index: 10;
   box-sizing: border-box;
   font-family: 'Metal Mania', cursive, sans-serif;
+  color: #fff;
+  z-index: 10;
 }
+
 
 /* —— scroll button —— */
 .scroll-btn {
   margin-top: 1rem;
   padding: .5rem 1rem;
-  background: #fff;
-  color: #000;
+  color: #ddd;
+  background-color: #000;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
   cursor: pointer;
   transition: background .3s, color .3s;
   font-family: 'Metal Mania', cursive, sans-serif;
 
 }
 .scroll-btn:hover {
-  background: #000;
-  color: #fff;
+  color: #000;
+  background-color: #ddd;
 }
-
+.landing-card.hidden .card-body {
+  display: none;
+}
 .metal-btn {
   display: inline-block;
   background: #fff;
@@ -377,7 +383,7 @@ input[type="submit"]:hover,
   padding: 0.5rem 1rem;
   text-transform: uppercase;
   text-decoration: none;
-  border-radius: 4px;
+  border-radius: 5px;
   transition: background 0.3s ease, color 0.3s ease;
   cursor: pointer;
 }
@@ -475,7 +481,8 @@ input[type="submit"]:hover,
 }
 
 .dashboard-item:hover {
-  text-decoration: underline;
+  font-weight: bold;
+  color: #3A78F2;
 }
 
 /* Status Indicators */
@@ -534,7 +541,7 @@ input[type="submit"]:hover,
 }
 
 /* Account Cards & Grids */
-/* Account Page ----------------------------------------------------------- */
+/* Account Page */
 .account-page .account-intro {
   margin-bottom: 2rem;
   font-size: 1.1rem;
@@ -553,7 +560,7 @@ input[type="submit"]:hover,
 .account-card {
   background-color: #191919;
   border: 1px solid #c5c5c5;
-  border-radius: 8px;
+  border-radius: 5px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -586,7 +593,7 @@ input[type="submit"]:hover,
 }
 .account-card__body img {
   max-width: 100%;
-  border-radius: 4px;
+  border-radius: 5px;
   margin-bottom: 1rem;
 }
 .account-card__body p {
@@ -607,20 +614,6 @@ input[type="submit"]:hover,
 .account-card__button {
   margin-top: 1rem;
   padding: 0.5rem 1rem;
-}
-
-/* Reuse your .simple-btn styles for consistency */
-.simple-btn {
-  background-color: #ddd;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  padding: 0.5rem 1rem;
-  transition: background 0.3s ease, color 0.3s ease;
-}
-.simple-btn:hover {
-  background-color: #3A78F2;
-  color: #fff;
 }
 
 /* Tables & Tooltips */
@@ -676,7 +669,7 @@ td {
   opacity: 1;
 }
 
-/* Careers Page ----------------------------------------------------------- */
+/* Careers Page */
 .careers-page .intro,
 .careers-page .why-join p {
   max-width: 42rem;
@@ -697,7 +690,7 @@ td {
 .career-card {
   background: #191919;
   border: 1px solid #3A78F2;
-  border-radius: 8px;
+  border-radius: 5px;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
@@ -725,6 +718,216 @@ td {
 /* reuse your .metal-btn */
 .career-card .metal-btn {
   margin-top: auto;
+}
+
+/* Careers Page */
+.careers-page .why-join h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+/* Department styling */
+.department {
+  margin-bottom: 2.5rem;
+}
+.department h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #3A78F2;
+  text-align: left;
+}
+
+/* —— reset & container —— */
+.positions {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* —— collapsed: single-row 3-column layout —— */
+.role-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: auto;
+  grid-template-areas: "title desc button";
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border: 1px solid #444;
+  border-radius: 5px;
+  transition: background-color .2s, border-color .2s;
+}
+
+/* map each piece into the grid */
+.role-item .role-title {
+  grid-area: title;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #fff;
+}
+.role-item .role-info {
+  grid-area: desc;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.role-item .role-desc {
+  color: #ccc;
+  justify-self: start;
+  text-align: left;
+}
+.role-item .metal-btn {
+  grid-area: button;
+  justify-self: end;
+}
+
+/* —— hidden, full description spans only the middle column —— */
+.role-full {
+  grid-area: full;
+  display: none;
+  color: #ddd;
+  line-height: 1.5;
+  justify-self: start;
+
+}
+
+/* —— expanded: add a second row where only “full” shows in middle column —— */
+.role-item.expanded {
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "title desc button"
+    ".     full   ." ;
+}
+.role-item.expanded .role-full {
+  display: block;
+}
+
+/* —— little arrow toggle on the title —— */
+.role-item .role-title::before {
+  content: "▸ ";
+  margin-left: .5rem;
+  transition: transform .2s;
+}
+
+.role-item.expanded .role-title::before {
+  content: "▾ ";
+  transform: rotate(90deg);
+}
+
+
+
+/* Container centers the form */
+.form-container {
+  display: flex;
+  justify-content: center;
+  padding: 3rem 1rem;
+  background: #000;
+}
+
+/* The “card” styling */
+.careers-form-card {
+  background: #111;
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+  max-width: 800px;
+  width: 100%;
+  color: #eee;
+}
+
+.careers-form-card h1 {
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+/* Two-column layout */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+/* Full-width rows */
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Field grouping */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #ccc;
+  text-align: left;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.75rem 1rem;
+  border: 1px solid #333;
+  border-radius: 6px;
+  background: #222;
+  color: #fff;
+  font-size: 1rem;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #3A78F2;
+  background: #1a1a1a;
+}
+
+.form-group small {
+  margin-top: 0.25rem;
+  font-size: 0.85rem;
+  color: #777;
+}
+
+/* Submit button */
+.submit-btn {
+  margin-top: 2rem;
+  width: 100%;
+  padding: 0.85rem;
+  background: #3A78F2;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.submit-btn:hover {
+  background: #2555c9;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 640px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .careers-form-card {
+    padding: 1.5rem;
+  }
+  .careers-form-card h1 {
+    font-size: 1.75rem;
+  }
 }
 
 
@@ -833,7 +1036,6 @@ label {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
 }
 
 .registration-form {
@@ -842,7 +1044,7 @@ label {
   flex-direction: column;
   max-width: 300px;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 5px;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 .form-group {
@@ -878,34 +1080,9 @@ label {
   opacity: 0;
 }
 
-/* Mobile Responsiveness */
-/* @media screen and (max-width: 840px) {
-  .header-section {
-    flex-direction: column;
-    width: 100%;
-  }
-  .info-item {
-    width: auto;
-    margin: 10px 0;
-  }
-  .dashboard-section,
-  .dashboard-item {
-    width: 100%;
-    margin: 10px 0;
-  }
-  .links-section {
-    width: 100%;
-    padding: 0 20px;
-  }
-}
-@media screen and (max-width: 640px) {
-  .center-monocolumn {
-    width: 100%;
-  }
-} */
 
-/* 2. Shrink padding/font on tiny screens */
-@media (max-width: 600px) {
+/* Shrink padding/font on tiny screens */
+@media (max-width: 640) {
   html, body {
     font-size: 0.9rem;
   }
@@ -918,6 +1095,10 @@ label {
 
   .landing-container {
     max-width: 95%;
+  }
+
+  .two-col-container {
+    max-width: auto;
   }
   /* Textarea: smaller min/max heights */
   .chat-bar textarea {
@@ -940,5 +1121,14 @@ label {
   /* Dashboard elements (if any) stack vertically or disappear */
   .dashboard-section {
     display: none;
+  }
+  .role-item {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: left;
+  }
+  .role-item .metal-btn {
+    width: 100%;
+    margin: 0.75rem 0 0;
   }
 }
