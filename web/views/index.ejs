@@ -4,9 +4,108 @@
     <html lang="en">
 
     <%- include('partials/head') %>
-        <body>
-            <div>
-                <img src="/images/nextmetal.svg" style="width: 200px" alt="Next Metal" class="logo">
-            </div>
+
+        <body class="bp5-dark">
+            <%- include('partials/header') %>
+
+                <main class="center-monocolumn">
+                    <section class="hero">
+                        <h1 class="metal-mania">Decentralized AI:</h1>
+                        <h1 class="metal-mania">Infrastructure and Marketplace</h1>
+                        <a href="/beta" class="metal-btn">Get Started</a>
+                    </section>
+
+                    <section class="features">
+                        <div class="card">
+                            <div class="card-icon">
+                                <img src="/images/m.svg" alt="m">
+                            </div>
+                            <h2>Metal</h2>
+                            <p>The ceiling of intelligence. Those who own the infrastructure control the AI.</p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon">
+                                <img src="/images/e.svg" alt="e">
+                            </div>
+                            <h2>Electricity</h2>
+                            <p>AI is the new electricity. The Fuel of Intelligence. </p>
+                        </div>
+                        <div class="card">
+                            <div class="card-icon">
+                                <img src="/images/t.svg" alt="t">
+                            </div>
+                            <h2>Time</h2>
+                            <p>The currency of progress. The only scarce currency are seconds.</p>
+                        </div>
+
+                    </section>
+
+                    <section id="why-join">
+                        <div class="text-wrap">
+                            <h1 class="metal-mania">Next Metal</h1>
+                            <p>
+                                Next Metal is democratizing AI by fusing it with secure, blockchain-powered
+                                infrastructure.
+                                Any GPU can be a part of the network, and any developer can build on it.s
+                                We are building a new kind of AI that is open, secure, and accessible to everyone.
+                                Community is the heart of our mission. We believe that by working together, we can
+                                create a better future for all.
+                                Our community is made up of developers, researchers, and enthusiasts who are passionate
+                                about AI.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- <section class="partners">
+                        <h2 class="section-heading">Our Partners</h2>
+                        <div class="logo-track">
+                          <ul class="logo-strip">
+                            <li><img src="https://placehold.co/120x60.png" alt="p1"></li>
+                            <li><img src="https://placehold.co/120x60.png" alt="p2"></li>
+                            <li><img src="https://placehold.co/120x60.png" alt="p3"></li>
+                            <li><img src="https://placehold.co/120x60.png" alt="p4"></li>
+                            <li><img src="https://placehold.co/120x60.png" alt="p5"></li>
+                            <li><img src="https://placehold.co/120x60.png" alt="p6"></li>
+                            <li><img src="https://placehold.co/120x60.png" alt="p7"></li>
+                          </ul>
+                      
+                          <ul class="logo-strip" aria-hidden="true">
+                            <li><img src="https://placehold.co/120x60.png" alt=""></li>
+                            <li><img src="https://placehold.co/120x60.png" alt=""></li>
+                            <li><img src="https://placehold.co/120x60.png" alt=""></li>
+                            <li><img src="https://placehold.co/120x60.png" alt=""></li>
+                            <li><img src="https://placehold.co/120x60.png" alt=""></li>
+                            <li><img src="https://placehold.co/120x60.png" alt=""></li>
+                            <li><img src="https://placehold.co/120x60.png" alt=""></li>
+                          </ul>
+                        </div>
+                      </section> -->
+
+
+                    <section class="testimonials">
+                        <h2 style="text-align:center; margin-bottom:3rem;">Trusted by</h2>
+                        <div class="features">
+                            <div class="card testimonial-item">
+                                <img src="/images/you.jpg" alt="Client photo">
+                                <p>“By the end of 2025, more people would run local AI models, which makes NextMetal an essential tool for decentralized AI.”</p>
+                                <small>— Doi Kim., AI Startup Founder</small>
+                            </div>
+                            <div class="card testimonial-item">
+                                <img src="/images/party.jpg" alt="Client photo">
+                                <p>“Rent out your GPU, collaboratively build distilled AI, and earn $MET tokens.”</p>
+                                <small>— Hyo Kim., Crypto OG</small>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="cta" style="text-align:center;">
+                        <h2>Ready to see it in action?</h2>
+                        <br>
+                        <a href="/beta" class="metal-btn">Schedule a Demo</a>
+                    </section>
+
+                    <%- include('partials/footer') %>
+                </main>
         </body>
+
     </html>

@@ -5,57 +5,59 @@ const passport = require('passport');
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const User = require('../models/user');
+
 const router = express.Router();
 
 // Register route
+function finishAuth (req, res) {
+  const redirectTo = req.session.returnTo || '/account';
+  delete req.session.returnTo;
+  res.redirect(redirectTo);
+}
+
+// Register
 router.post('/register', async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const id = uuidv4();
 
-    let user;
-    try {
-      user = await User.findByEmail(email);
-    } catch (err) {
-      // User not found, proceed with registration
-    }
+    let user = await User.findByEmail(email).catch(() => null);
 
     if (user) {
-      const isMatch = await bcrypt.compare(password, user.password_hash);
-      if (!isMatch) {
-        return res.redirect('/members?error=Incorrect password');
-      }
-      req.login(user, (err) => {
-        if (err) return next(err);
-        res.redirect('/account');
-      });
+      const ok = await bcrypt.compare(password, user.password_hash);
+      if (!ok) return res.redirect('/members?error=Incorrect+password');
     } else {
-      user = await User.create({ email, id, password });
-      req.login(user, (err) => {
-        if (err) return next(err);
-        res.redirect('/account');
+      const hash = await bcrypt.hash(password, 12);
+      user = await User.create({
+        id: uuidv4(),
+        email,
+        password_hash: hash
       });
     }
-  } catch (err) {
-    console.error(err);
-    res.redirect('/members?error=Registration failed');
+
+    /* 2. start a session */
+    req.login(user, err => err ? next(err) : finishAuth(req, res));
+
+  } catch (e) {
+    console.error(e);
+    res.redirect('/members?error=Registration+failed');
   }
 });
 
-// Login route
-router.post('/login', passport.authenticate('local', {
-  successRedirect: '/account',
-  failureRedirect: '/members?error=Invalid credentials',
-}));
 
-// Logout route
-router.get('/logout', (req, res, next) => {
-  req.logout((err) => {
-    if (err) {
-      return next(err);
+// Login 
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', (err, user) => {
+    if (err || !user) {
+      return res.redirect('/members?error=Invalid+credentials');
     }
-    res.redirect('/'); // Redirect to the home page or login page after logout
-  });
+    req.login(user, err2 => err2 ? next(err2) : finishAuth(req, res));
+  })(req, res, next);
+});
+
+
+// Logout
+router.get('/logout', (req, res, next) => {
+  req.logout(err => (err ? next(err) : res.redirect('/')));
 });
 
 module.exports = router;

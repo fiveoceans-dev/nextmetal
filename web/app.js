@@ -74,17 +74,35 @@ app.set('views', path.join(__dirname, 'views'));
 // Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Remember the return URL
+app.use((req, res, next) => {
+  const skip =
+    req.path.startsWith('/members') ||
+    req.path.startsWith('/auth');
+
+  if (
+    !req.isAuthenticated?.() &&
+    req.method === 'GET' &&
+    req.accepts('html') &&
+    !req.xhr &&
+    !skip
+  ) {
+    req.session.returnTo = req.originalUrl;
+  }
+  next();
+});
+
 // Import and use routes
+const authRoutes = require('./routes/auth');
 const routes = require('./routes/index');
 const articleRoutes = require('./routes/articles');
 const pagesRoutes = require('./routes/pages');
-const authRoutes = require('./routes/auth');
 const apiRoutes = require('./routes/api');
 
 app.use('/', routes);
+app.use('/auth', authRoutes);
 app.use('/articles', articleRoutes);
 app.use('/', pagesRoutes);
-app.use('/auth', authRoutes);
 app.use('/api', apiRoutes);
 
 // 404 Error Handling

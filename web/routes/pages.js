@@ -1,95 +1,48 @@
-// /route/pages.js
+// routes/pages.js
+const express          = require('express');
+const router           = express.Router();
+const isAuthenticated  = require('../middlewares/isAuthenticated');
 
-const express = require('express');
-const router = express.Router();
-
-// Middleware to check if the user is authenticated
-const isAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next();
-  } else {
-    res.redirect('/pages/members?error=Please login to access this page');
-  }
-};
-
-// Route for the members page (login/signup)
-router.get('/', (req, res) => {
-    const error = req.query.error || null;
-    res.render('index', { 
-        title: 'Next Metal - Register/Login', 
-        description: 'Create your account for Next Metal services',
-        error
+/* ───────────── helper: render pages/<name>.ejs ────────────── */
+function view (name, extra = {}) {
+  return (req, res) =>
+    res.render(`pages/${name}`, {
+      title: `Next Metal - ${name.replace(/(^|\s)\S/g, s => s.toUpperCase())}`,
+      description: extra.desc || '',
+      error: req.query.error || null,
+      user:   req.user,
+      ...extra.ctx
     });
-});
+}
 
+/* ───────────── PUBLIC ROUTES ───────────── */
 
-// Route for the members page (login/signup)
-router.get('/members', (req, res) => {
-    const error = req.query.error || null;
-    res.render('pages/members', { 
-        title: 'Next Metal - Register/Login', 
-        description: 'Create your account for Next Metal services',
-        error
-    });
-});
+/*  Home page (landed on site root)  */
+router.get('/', (req, res) =>
+  res.render('index', {
+    title: 'Next Metal',
+    description: 'Create your account for Next Metal services',
+    error: req.query.error || null
+  })
+);
 
-// Route for the account page, accessible only if authenticated
-router.get('/account', isAuthenticated, (req, res) => {
-    const error = req.query.error || null;
-    res.render('pages/account', { 
-        title: 'Next Metal - Account', 
-        description: 'Your Next Metal account page',
-        error,
-        user: req.user
-    });
-});
+/*  Register / login page  */
+router.get('/members', view('members', {
+  desc: 'Create your account for Next Metal services'
+}));
 
-// Route for the download page
-router.get('/download-page', (req, res) => {
-    res.render('pages/download-page', { 
-        title: 'Next Metal - Download', 
-        description: 'Download Next Metal client'
-    });
-});
+/*  Marketing & docs  */
+router.get('/download-page', view('download-page', { desc: 'Download Next Metal client' }));
+router.get('/vision',         view('vision',        { desc: 'Latest vision & updates'  }));
+router.get('/quick-start',    view('quick-start',   { desc: 'Spin up a node in 3 steps' }));
+router.get('/careers',        view('careers',       { desc: 'Join the Next Metal team'  }));
+router.get('/press',          view('press',         { desc: 'Press inquiries & media kit' }));
 
+/* ───────────── PRIVATE (login‑required) ROUTES ───────────── */
 
-// Route for the vision page
-router.get('/vision', (req, res) => {
-    res.render('pages/vision', { 
-        title: 'Next Metal - Vision', 
-        description: 'Check out the latest news and updates from Next Metal.'
-    });
-});
+router.get('/account',  isAuthenticated, view('account',  { desc: 'Your Next Metal account'  }));
+router.get('/hosting',  isAuthenticated, view('hosting',  { desc: 'Your Next Metal hosting'  }));
+router.get('/agents',   isAuthenticated, view('agents',   { desc: 'Your Next Metal agents'   }));
+router.get('/storage',  isAuthenticated, view('storage',  { desc: 'Your Next Metal storage'  }));
 
-// Route for the quick-start page
-router.get('/quick-start', (req, res) => {
-    res.render('pages/quick-start', { 
-        title: 'Next Metal - Quick Start', 
-        description: 'Spin up your first Next Metal node in 3 simple steps.'
-    });
-});
-
-// Route for the careers page
-router.get('/careers', (req, res) => {
-    res.render('pages/careers', { 
-        title: 'Next Metal - Careers', 
-        description: 'Join the Next Metal team. We are hiring!'
-    });
-});
-
-// Route for the careers page
-router.get('/careers-form', (req, res) => {
-    res.render('pages/careers-form', {
-        title: 'Next Metal - Careers', 
-        description: 'Join the Next Metal team. We are hiring!'
-    });
-});
-
-// Route for the press page
-router.get('/press', (req, res) => {
-    res.render('pages/press', { 
-        title: 'Next Metal - Press', 
-        description: 'Press inquiries and media kit.'
-    });
-});
 module.exports = router;

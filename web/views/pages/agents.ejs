@@ -1,0 +1,56 @@
+<%# pages/endpoints.ejs %>
+
+<%- include('../layout', { 
+    title: 'Next Metal - Agents', 
+    description: 'View and manage your Endpoints', 
+    body: `
+
+    <main class="center-monocolumn">
+        <div class="line"></div>
+        <h1>Agents</h1>
+        <p>Multi-platform, easy-to-use client. Please install Docker and ensure it is running. You can select what containers you want to run on your computer. We highly recommend you run one or two containers and add more containers later to increase profitability.</p>
+        <br>
+        <!-- File Search Section -->
+        <div class="bordered-section">
+            <div class="section-title">RPCs</div>
+            <div class="content-min">
+                <input type="text" placeholder="Search" class="git-namespace-input">
+                <button>Search</button>
+            </div>
+        </div>
+        <br>
+
+        <div class="bordered-section">
+            <div class="section-title">My Projects</div>
+                <div class="content-min-2">
+                    <div class="content-min-card">
+                        <div class="network-header">
+                            <img src="https://static.alchemyapi.io/images/emblems/shape-mainnet.svg" alt="Shape">
+                            <h2>Shape</h2>
+                            <input type="text" readonly value="https://shape-sepolia.g.alchemy.com/v2/uTTsp2z0AQw9o1aT4kqKFE7pZXA5CkCr">
+                        </div>
+                    </div>
+
+                    <div class="content-min-card">
+                        <div class="network-header">
+                            <img src="https://static.alchemyapi.io/images/emblems/eth-mainnet.svg" alt="Ethereum">
+                            <h2>Ethereum</h2>
+                            <input type="text" readonly value="https://eth-mainnet.g.alchemy.com/v2/uTTsp2z0AQw9o1aT4kqKFE7pZXA5CkCr">
+                        </div>
+                    </div>
+                    
+                    <div class="content-min-card">
+                        <div class="network-header">
+                            <img src="https://static.alchemyapi.io/images/emblems/zksync-mainnet.svg" alt="ZKsync">
+                            <h2>ZKsync</h2>
+                            <input type="text" readonly value="https://zksync-mainnet.g.alchemy.com/v2/uTTsp2z0AQw9o1aT4kqKFE7pZXA5CkCr">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    ` 
+}) %>
