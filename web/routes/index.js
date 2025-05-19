@@ -5,8 +5,8 @@ const router = express.Router();
 
 // Render the main index page
 
-router.get('/main', (req, res) => {
-    res.render('index-main');
+router.get('/', (req, res) => {
+    res.render('index');
 });
 
 router.get('/beta', (req, res) => {

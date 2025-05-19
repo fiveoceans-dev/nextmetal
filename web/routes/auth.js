@@ -10,7 +10,7 @@ const router = express.Router();
 
 // Register route
 function finishAuth (req, res) {
-  const redirectTo = req.session.returnTo || '/account';
+  const redirectTo = req.session.returnTo || '/dashboard';
   delete req.session.returnTo;
   res.redirect(redirectTo);
 }

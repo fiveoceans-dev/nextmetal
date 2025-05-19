@@ -3,7 +3,7 @@
 :root {
   --primary: #ffffff;
   --secondary: #000000;
-  --accent: #3414e6;
+  --accent: #3414e6e0;
   --accent-2: #e43a9b;
   --text: #ffffff;
   --bg: #111;
@@ -94,6 +94,47 @@
   cursor: pointer;
 }
 
+.avatar-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.avatar-dropdown .avatar img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: #1a1a1a;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 4px;
+  min-width: 120px;
+  z-index: 1000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.dropdown-menu .dropdown-item {
+  padding: 10px 16px;
+  display: block;
+  text-decoration: none;
+  color: white;
+}
+
+.dropdown-menu .dropdown-item:hover {
+  background: #333;
+}
+
+.avatar-dropdown:hover .dropdown-menu {
+  display: block;
+}
+
 .topbar .logo-metal {
   width: 25px;
   height: 25px;
@@ -111,6 +152,12 @@
   object-fit: cover;
 }
 
+.account-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
 /* --- container layout --- */
 .container {
   flex: 1;
@@ -208,6 +255,10 @@
   cursor: pointer;
 }
 
+.sidebar button.new-btn:hover {
+  border: 1px solid var(--accent);
+}
+
 .sidebar .search input {
   width: 100%;
   padding: 0.5rem;
@@ -251,7 +302,7 @@
 }
 
 /* main */
-.main {
+.mainwindow {
   flex: 1;
   overflow-y: auto;
   padding: 1.5rem;
@@ -522,7 +573,7 @@ img {
   max-width: 64rem;
   margin: 0 auto;
   text-align: center;
-  padding-bottom: 70px;
+  padding: 5px;
 }
 
 .left-column,
@@ -956,7 +1007,7 @@ input[type="submit"]:hover,
 }
 
 /* Dashboard */
-.dashboard-section {
+.stats-section {
   font-size: x-small;
   color: #000;
   display: flex;
@@ -969,13 +1020,13 @@ input[type="submit"]:hover,
   z-index: 1000;
 }
 
-.dashboard-item {
+.stats-item {
   width: 20%;
   text-align: center;
   margin: 2px;
 }
 
-.dashboard-item:hover {
+.stats-item:hover {
   font-weight: bold;
   color: var(--accent);
 }
@@ -1132,8 +1183,9 @@ table {
 }
 
 thead {
-  background-color: #000;
   font-weight: bold;
+  padding: 2px;
+  text-align: left;
 }
 
 tbody {
@@ -1495,7 +1547,7 @@ td {
 .bordered-section,
 .bordered-section {
   border: 1px solid #444;
-  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+  /* box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1); */
   margin: 0 auto 5px;
   padding: 5px;
 }
@@ -1585,12 +1637,11 @@ label {
 
 /* Footer */
 .footer {
-  margin-top: auto;
-  margin-left: auto;
-  margin-right: auto;
   padding: 10px 0;
   text-align: center;
   font-size: 12px;
+  color: #888;
+  background: #111;
 }
 
 /* Background Video */
@@ -1654,7 +1705,7 @@ label {
   }
 
   /* Dashboard elements (if any) stack vertically or disappear */
-  .dashboard-section {
+  .stats-section {
     display: none;
   }
 

@@ -1,0 +1,46 @@
+<%# pages/database.ejs %>
+
+<%- include('../temp', { 
+    title: 'Next Metal - Databse', 
+    description: 'Description', 
+    body: `
+
+    <div id="flow-root">
+        <main class="center-monocolumn">
+            <h1>Database</h1>
+            <p>Multi-platform, easy-to-use client. Please install Docker and ensure it is running. You can select what containers you want to run on your computer. We highly recommend you run one or two containers and add more containers later to increase profitability.</p>
+            <br>
+
+            <div class="bordered-section">
+                <div class="section-title">My Files</div>
+                <div class="content">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>id uuid</th>
+                                <th>email text</th>
+                                <th>password_hash text</th>
+                                <th>created_at timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>194n9uba</td>
+                                <td>hyocho@gmail.com</td>
+                                <td>$n97b9v39vtb93bt03bt0-tB</td>
+                                <td>2025-04-10 16:09:25.114712</td>
+                            </tr>
+                            <tr>
+                                <td>1241515</td>
+                                <td>oliver@gmail.com</td>
+                                <td>$b87b9v39vtb93bt03bt0rrtt</td>
+                                <td>2021-02-10 11:09:25.114712</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    ` 
+}) %>

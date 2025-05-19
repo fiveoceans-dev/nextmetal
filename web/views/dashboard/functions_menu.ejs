@@ -1,0 +1,25 @@
+<%# pages/functions.ejs %>
+
+<%- include('../temp', { 
+    title: 'Next Metal - Functions', 
+    description: 'Description', 
+    body: `
+
+    <div class="section">
+        <h2>Functions</h2>
+        <button class="new-btn">+ New bucket</button>
+        <div class="search"><input placeholder="Search buckets…" /></div>
+        <div class="list-empty">No buckets yet<br /><small>Create one to get started</small></div>
+    </div>
+    <div class="section">
+        <h2>Configuration</h2>
+        <a href="#"><svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" />
+            </svg>Policies</a>
+        <a href="#"><svg viewBox="0 0 24 24">
+            <rect x="4" y="4" width="16" height="16" rx="2" />
+            </svg>Settings</a>
+    </div>
+
+    ` 
+}) %>

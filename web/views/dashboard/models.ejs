@@ -1,0 +1,58 @@
+<%# pages/models.ejs %>
+
+<%- include('../temp', {
+    title: 'Next Metal - Models',
+    description: 'Description',
+    body: `
+    <div id="flow-root">
+        <main class="center-monocolumn">
+            <h1>Models</h1>
+            <p>Multi-platform, easy-to-use client. Please install Docker and ensure it is running. You can select what
+                containers you want to run on your computer. We highly recommend you run one or two containers and add more
+                containers later to increase profitability.</p>
+            <br>
+            <!-- File Search Section -->
+
+            <div class="bordered-section">
+                <div class="section-title">Open source models</div>
+                <div class="content-min">
+                    <input type="text" placeholder="Search" class="git-namespace-input">
+                    <button>Search</button>
+                </div>
+                <br>
+                <div class="content">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Model name</th>
+                                <th>Checksum</th>
+                                <th>Size</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Llama3.2-3B</td>
+                                <td>n9bf9qtb92tub29tb20tub0u4bt024bt02b4yt02by02</td>
+                                <td>6.0G</td>
+                                <td>
+                                    <button class="">Download</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Llama3.3-70B-Instruct</td>
+                                <td>n209ub26t0b2026b02b6026b206bn20y6bn02ny02ny02</td>
+                                <td>165G</td>
+                                <td>
+                                    <button class="">Download</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            </div>
+        </main>
+    </div>
+    `
+}) %>
