@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Gradient‑UI Gallery</title>
+<style>
+  /* ---- root palette ---- */
+  :root {
+    --grad: linear-gradient(
+      to right,
+      #ff8983 17.85%,
+      #7f0e7f 53.28%,
+      #007a35 100%
+    );
+    --bg-dark: #141414;
+    --white:   #fff;
+  }
+
+  /* ---- global ---- */
+  * { box-sizing: border-box; }
+  html, body {
+    height: 100%; margin: 0;
+    font: 15px/1.4 "Inter", system-ui, sans-serif;
+    background: var(--bg-dark);
+    color: var(--white);
+  }
+  main {
+    max-width: 640px;
+    margin: 40px auto;
+    padding: 24px;
+    border-radius: 12px;
+    background: #222;
+    box-shadow: 0 8px 20px hsla(0,0%,0%,0.4);
+  }
+  h1 { margin-top: 0; font-size: 1.5rem; }
+
+  /* ---- button ---- */
+  .btn {
+    appearance: none;
+    border: 0;
+    padding: 10px 22px;
+    border-radius: 30px;
+    font-weight: 600;
+    letter-spacing: .3px;
+    background-image: var(--grad);
+    color: var(--white);
+    cursor: pointer;
+    transition: opacity .25s;
+  }
+  .btn:hover   { opacity: .85; }
+  .btn:active  { opacity: .75; }
+
+  /* ---- divider line ---- */
+  hr.gradient-line {
+    height: 4px;
+    border: 0;
+    border-radius: 2px;
+    background: var(--grad);
+    margin: 32px 0;
+  }
+
+  /* ---- toggle switch ---- */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 44px; height: 24px;
+  }
+  .switch input { display: none; }
+  .slider {
+    position: absolute; inset: 0;
+    background: #555;
+    border-radius: 24px;
+    transition: background .25s;
+  }
+  .slider::before {
+    content: "";
+    position: absolute; left: 3px; top: 3px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--white);
+    transition: transform .25s;
+  }
+  input:checked + .slider {
+    background-image: var(--grad);
+  }
+  input:checked + .slider::before {
+    transform: translateX(20px);
+  }
+
+  /* ---- range slider ---- */
+  input[type=range] {
+    width: 100%;
+    margin: 24px 0;
+    background: transparent;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-runnable-track {
+    height: 6px; border-radius: 3px;
+    background: var(--grad);
+  }
+  input[type=range]::-webkit-slider-thumb {
+    appearance: none; margin-top: -6px;
+    width: 18px; height: 18px;
+    border-radius: 50%; border: 2px solid #222;
+    background: var(--white);
+  }
+  /* Firefox */
+  input[type=range]::-moz-range-track     { background: var(--grad); height: 6px; border-radius: 3px; }
+  input[type=range]::-moz-range-thumb     { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #222; background: var(--white); }
+</style>
+</head>
+<body>
+<main>
+  <h1>UI Elements on Gradient Theme</h1>
+
+  <!-- button -->
+  <button class="btn">Primary Button</button>
+
+  <!-- divider -->
+  <hr class="gradient-line" />
+
+  <!-- toggle -->
+  <label class="switch">
+    <input type="checkbox" id="demo-toggle" />
+    <span class="slider"></span>
+  </label>
+  <label for="demo-toggle" style="margin-left:10px;">Toggle switch</label>
+
+  <!-- range slider -->
+  <input type="range" min="0" max="100" value="40" />
+</main>
+</body>
+</html>

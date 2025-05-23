@@ -22,3 +22,5 @@ lerna-debug.log*
 .npm
 node_modules/ 
 jspm_packages/
+
+macos/

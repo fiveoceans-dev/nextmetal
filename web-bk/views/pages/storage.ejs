@@ -1,0 +1,76 @@
+<%# pages/storage.ejs %>
+
+<%- include('../layout', { 
+    title: 'Next Metal - Storage', 
+    description: 'Description', 
+    body: `
+
+    <main class="center-monocolumn">
+        <div class="line"></div>
+        <h1>Storage</h1>
+        <p>Multi-platform, easy-to-use client. Please install Docker and ensure it is running. You can select what containers you want to run on your computer. We highly recommend you run one or two containers and add more containers later to increase profitability.</p>
+        <br>
+
+        <!-- File Upload Section -->
+        <div class="bordered-section">
+            <div class="section-title">Upload</div>
+            <div class="content">
+                <form enctype="multipart/form-data" action="/upload" method="post" class="">
+                    <input type="file" name="file" class="file-input" accept=".torrent, .zip, .rar, .tar, .7z">
+                    <button type="submit" class="upload-btn">Upload</button>
+                </form>
+            </div>
+        </div>
+        <br>
+
+        <!-- File Search Section -->
+        <div class="bordered-section">
+            <div class="section-title">Search</div>
+            <div class="content">
+                <form enctype="multipart/form-data" action="/search" method="post" class="">
+                    <input type="text" placeholder="Search for files..." class="file-search-input">
+                    <button class="search-btn">Search</button>
+                </form>
+            </div>
+        </div>
+        <br>
+
+        <div class="bordered-section">
+            <div class="section-title">My Files</div>
+            <div class="content">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>File Name</th>
+                            <th>Hash</th>
+                            <th>Size</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Project Document.zip</td>
+                            <td>hashhashhash</td>
+                            <td>2.5 MB</td>
+                            <td>
+                                <button class="">Download</button>
+                                <button class="">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Sample Video.torrent</td>
+                            <td>hashhashhash</td>
+                            <td>750 MB</td>
+                            <td>
+                                <button class="">Download</button>
+                                <button class="">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    ` 
+}) %>

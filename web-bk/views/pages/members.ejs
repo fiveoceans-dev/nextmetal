@@ -1,0 +1,45 @@
+<%# pages/memebrs.ejs%>
+
+<%- include('../layout', { 
+    title: 'Next Metal - Registration Form', 
+    description: 'Register for Next Metal Services',
+    body: `
+
+    <main class="center-monocolumn">
+        <div class="line"></div>
+        <h1>Members</h1>
+        <form class="registration-form" action="/auth/register" method="POST">
+            <!-- Group: Email, ID, Password -->
+            <div class="form-group">
+                <!-- Email Field -->
+                <input type="email" id="email" name="email" required placeholder="Enter your email" />
+
+                <!-- Password Field with 'See' and 'Copy' Buttons -->
+                <div class="password-field">
+                    <input type="password" id="password" name="password" required placeholder="Enter your password" />
+                    <button type="button" id="toggle-password" class="password-button">
+                        <i class="fa fa-eye"></i>
+                    </button>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="register-button">Login or Register</button>
+            </div>
+        </form>
+    </main>
+
+
+
+    <script>
+        // Toggle password visibility
+        document.getElementById("toggle-password").addEventListener("click", function() {
+            const passwordField = document.getElementById("password");
+            const type = passwordField.type === "password" ? "text" : "password";
+            passwordField.type = type;
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+    </script>
+
+`
+}) %>

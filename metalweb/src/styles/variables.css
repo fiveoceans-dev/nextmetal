@@ -1,0 +1,22 @@
+/* ---- CSS Custom Props & Reset ---- */
+:root {
+  --primary:#fff;  --secondary:#000;
+  --accent:#3414e6; --accent-2:#e43a9b;
+  --text:#fff;     --bg:#111;
+
+  /* layout */
+  --nav-collapsed:60px;  --nav-expanded:200px;
+  --sidebar-width:240px; --topbar-height:50px;
+  --icon-size:28px;      --transition:.2s ease;
+
+  /* colours */
+  --color-nav-bg:#020625;  --color-nav-text:#cdd6f4;
+  --color-sidebar-bg:#1e1e2a;
+  --color-topbar-bg:#11101d;
+  --color-main-bg:#0f0e17;
+  --color-card-bg:#1a1826;
+  --color-border:#272635;
+}
+
+/* A very small reset */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}

@@ -1,0 +1,45 @@
+.chat-bar {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 64rem;
+    padding: 10px;
+    border: 1px solid #888;
+    border-radius: 5px;
+    background: #000;
+    display: flex;
+    align-items: flex-start;
+    z-index: 1000;
+}
+
+.chat-bar textarea {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    resize: none;
+    background: #191919;
+    color: var(--text);
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 2px;
+    border-radius: 2px;
+    white-space: pre-wrap;
+}
+
+.message.sent {
+    align-self: flex-end;
+    text-align: left;
+    border-left: 2px solid #3414e6;
+    background: #191919;
+}
+
+.message.received {
+    align-self: flex-start;
+    border-left: 2px solid #f31895;
+    background: #191919;
+}
