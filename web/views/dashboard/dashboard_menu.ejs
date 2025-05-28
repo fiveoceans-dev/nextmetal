@@ -1,21 +1,14 @@
-<%# pages/landing.ejs %>
+<%# dashboard/dashboard_menu.ejs %>
 
-<%- include('../temp', { 
-    title: 'Next Metal - Landing', 
-    description: 'Description', 
-    body: `
+    <%- include('../temp', { title: 'Next Metal - Landing' , description: 'Description' , body: ` <div class="section">
+        <div class="section">
+            <h2>Dashboard</h2>
+            <button class="new-btn" onclick="showSection('wallet')">Account</button>
+            <button class="new-btn" onclick="showSection('account')">Password</button>
+        </div>
 
-    <div class="section">
-        <h2>Dashboard</h2>
-        <button class="new-btn">Resources</button>
-        <button class="new-btn">Wallet</button>
-    </div>
-    <div class="section">
-        <h2>Configuration</h2>
-        <a href="#"><svg viewBox="0 0 24 24">
-            <rect x="4" y="4" width="16" height="16" rx="2" />
-            </svg>Settings</a>
-    </div>
 
-    ` 
-}) %>
+
+
+        `
+        }) %>

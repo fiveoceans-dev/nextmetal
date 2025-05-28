@@ -1,0 +1,162 @@
+/* ────────────────────────────────
+   Enable UUID generator once
+──────────────────────────────────*/
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+/* ────────────────────────────────
+   1.  USERS
+──────────────────────────────────*/
+CREATE TABLE users (
+  id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  email            TEXT UNIQUE NOT NULL
+                     CHECK (email ~* '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$'),
+  password_hash    TEXT NOT NULL,                        -- bcrypt/argon2 only
+  nickname         TEXT UNIQUE,
+  pub_eth_address  BYTEA UNIQUE CHECK (length(pub_eth_address)=20),
+  enc_priv_key     BYTEA,                                -- encrypted blob
+  is_verified      BOOLEAN      DEFAULT FALSE,
+  created_at       TIMESTAMPTZ  DEFAULT now(),
+  updated_at       TIMESTAMPTZ  DEFAULT now()
+);
+
+CREATE OR REPLACE FUNCTION touch_users_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at := now();
+  RETURN NEW;
+END $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_users_touch
+BEFORE UPDATE ON users
+FOR EACH ROW EXECUTE FUNCTION touch_users_updated_at();
+
+
+/* ────────────────────────────────
+   2.  EMAIL / PASSWORD flows
+──────────────────────────────────*/
+CREATE TABLE email_verifications (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id     UUID REFERENCES users(id) ON DELETE CASCADE,
+  verification_code TEXT NOT NULL,
+  expires_at  TIMESTAMPTZ NOT NULL,
+  created_at  TIMESTAMPTZ DEFAULT now()
+);
+CREATE INDEX idx_email_verif_user  ON email_verifications(user_id);
+
+CREATE TABLE password_resets (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id     UUID REFERENCES users(id) ON DELETE CASCADE,
+  reset_token TEXT NOT NULL,
+  expires_at  TIMESTAMPTZ NOT NULL,
+  created_at  TIMESTAMPTZ DEFAULT now()
+);
+CREATE INDEX idx_pwdreset_user     ON password_resets(user_id);
+
+/* ────────────────────────────────
+   3.  REFERRAL CODES + REGISTRATION LOG
+──────────────────────────────────*/
+CREATE TABLE referral_codes (
+  code        TEXT  PRIMARY KEY,
+  owner_id    UUID  REFERENCES users(id) ON DELETE SET NULL,
+  created_at  TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE referral_usages (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  referred_id   UUID REFERENCES users(id) ON DELETE CASCADE,
+  referral_code TEXT REFERENCES referral_codes(code),
+  used_at       TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE UNIQUE INDEX unique_referral_per_user ON referral_usages(referred_id);
+
+CREATE OR REPLACE FUNCTION limit_referral_codes()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.owner_id IS NULL THEN
+    RETURN NEW;
+  END IF;
+
+  IF (SELECT count(*) FROM referral_codes WHERE owner_id = NEW.owner_id) >= 5 THEN
+    RAISE EXCEPTION 'User % already has 5 referral codes', NEW.owner_id;
+  END IF;
+
+  RETURN NEW;
+END $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_referral_limit
+BEFORE INSERT ON referral_codes
+FOR EACH ROW EXECUTE FUNCTION limit_referral_codes();
+
+
+/* ────────────────────────────────
+   4.  POINTS system
+──────────────────────────────────*/
+CREATE TYPE point_type AS ENUM ('referral','quest','easter_egg','bonus','mining');
+
+CREATE TABLE point_ledger (
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id    UUID REFERENCES users(id) ON DELETE CASCADE,
+  type       point_type NOT NULL,
+  delta      INT        NOT NULL,
+  meta       JSONB      DEFAULT '{}'::jsonb,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE MATERIALIZED VIEW user_point_balance AS
+SELECT user_id, SUM(delta)::INT AS balance
+FROM point_ledger
+GROUP BY user_id;
+CREATE UNIQUE INDEX mv_user_point_balance_uid ON user_point_balance(user_id);
+
+
+/* ────────────────────────────────
+   5.  QUESTS (one row per user, 5 quest columns)
+──────────────────────────────────*/
+CREATE TABLE user_quests (
+  user_id      UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  quest1_done  BOOLEAN DEFAULT FALSE,
+  quest2_done  BOOLEAN DEFAULT FALSE,
+  quest3_done  BOOLEAN DEFAULT FALSE,
+  quest4_done  BOOLEAN DEFAULT FALSE,
+  quest5_done  BOOLEAN DEFAULT FALSE,
+  updated_at   TIMESTAMPTZ DEFAULT now()
+);
+
+
+/* ────────────────────────────────
+   6.  MINING FAN-OUT
+──────────────────────────────────*/
+CREATE TABLE mining_batches (
+  id            BIGSERIAL PRIMARY KEY,
+  source_hash   BYTEA  NOT NULL,
+  total_points  BIGINT NOT NULL CHECK (total_points>0),
+  minted_at     TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE mining_allocations (
+  batch_id BIGINT REFERENCES mining_batches(id) ON DELETE CASCADE,
+  user_id  UUID   REFERENCES users(id)          ON DELETE CASCADE,
+  points   BIGINT NOT NULL CHECK (points>0),
+  PRIMARY KEY (batch_id, user_id)
+);
+CREATE INDEX ma_user_idx  ON mining_allocations(user_id);
+CREATE INDEX ma_batch_idx ON mining_allocations(batch_id);
+
+CREATE OR REPLACE FUNCTION add_to_point_ledger()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO point_ledger (user_id, type, delta, meta)
+  VALUES (NEW.user_id, 'mining', NEW.points, jsonb_build_object('batch_id', NEW.batch_id));
+  RETURN NEW;
+END $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_ma_to_ledger
+AFTER INSERT ON mining_allocations
+FOR EACH ROW EXECUTE FUNCTION add_to_point_ledger();
+
+
+/* ────────────────────────────────
+   7.  SAMPLE generic referral
+──────────────────────────────────*/
+INSERT INTO referral_codes (code) VALUES ('AIRDROP-2024');

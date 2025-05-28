@@ -1,4 +1,4 @@
-<%# temp.ejs %>
+<%# dashboard.ejs %>
 
   <!DOCTYPE html>
   <html lang="en">
@@ -6,7 +6,7 @@
   <%- include('partials/head') %>
 
     <main class="account-page">
-      <header class="topbar">
+      <header class="dashboardbar">
         <div class="left">
           <div class="logo-metal">
             <a href="/">
@@ -26,7 +26,7 @@
               <img src="/images/band.jpg" alt="avatar">
             </div>
             <div class="dropdown-menu">
-              <a href="/account" class="dropdown-item">Profile</a>
+              <!-- <a href="/account" class="dropdown-item">Profile</a> -->
               <a href="/auth/logout" class="dropdown-item">Logout</a>
             </div>
           </div>
@@ -75,9 +75,9 @@
         <aside class="sidebar">
           <%- include(sidebar) %>
         </aside>
-        <!-- dashboard -->
+        <!-- mainwindow -->
         <div class="mainwindow">
-            <div class="dashboard_page">
+            <div>
               <%- include(mainwindow) %>
             </div>
         </div>

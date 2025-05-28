@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 28.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 350 350" style="enable-background:new 0 0 350 350;" xml:space="preserve">
+	 viewBox="0 0 180 100" style="enable-background:new 0 0 180 100;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:#3414E6;}
+	.st0{fill:none;stroke:#000000;stroke-width:4;stroke-miterlimit:10;}
 </style>
-<path class="st0" d="M33.5,25.5l150,150.5l150-150.5v300h-300V25.5z"/>
+<circle class="st0" cx="90" cy="49.7" r="48.2"/>
+<circle cx="90" cy="49.7" r="4.8"/>
 </svg>

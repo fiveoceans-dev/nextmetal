@@ -1,17 +1,61 @@
-<%# pages/landing.ejs %>
+<%# dashboard/dashboard.ejs %>
 
-<%- include('../temp', { 
-    title: 'Next Metal - Landing', 
-    description: 'Description', 
-    body: `
+    <main>
+        <h1>Dashboard</h1>
+        <section id="wallet-section" class="dashboard-section">
+            <div class="features">
 
-    <div id="flow-root">
-        <main class="center-monocolumn">
-            <h1>Dashboard</h1>
-            <br>
+                <div class="dashboard-card">
+                    <h3>Account</h3>
+                    <ul>
+                        <li>Balance: </li>
+                        <li><%= balance %> points</li>
+                        <% ledger.forEach(p=> { %>
+                            <li>
+                                <%= p.type %>: <%= p.delta %> @ <%= new Date(p.created_at).toLocaleString() %>
+                            </li>
+                            <% }) %>
+                    </ul>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Referral Codes</h3>
+                    <ul>
+                        <% referrals.forEach(ref=> { %>
+                            <li>
+                                <%= ref.code %> — used <%= ref.used_count %> times
+                            </li>
+                            <% }) %>
+                    </ul>
+                </div>
+            </div>
 
-            
-        </main>
-    </div>
-    ` 
-}) %>
+        </section>
+
+        <section id="account-section" class="dashboard-section" style="display:none">
+            <div class="features">
+
+                <div class="card">
+                    <h2>Password</h2>
+                    <form method="POST" action="/dashboard/password">
+                        <input type="password" name="old_password" placeholder="Current Password" />
+                        <input type="password" name="new_password" placeholder="New Password" />
+                        <button type="submit">Update Password</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script>
+        function showSection(section) {
+            document.querySelectorAll('.dashboard-section').forEach(s => s.style.display = 'none');
+            document.getElementById(`${section}-section`).style.display = 'block';
+        }
+    </script>
+
+    <script>
+        function showSection(section) {
+            document.querySelectorAll('.dashboard-section').forEach(s => s.style.display = 'none');
+            const target = document.getElementById(`${section}-section`);
+            if (target) target.style.display = 'block';
+        }
+    </script>

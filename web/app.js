@@ -95,15 +95,15 @@ app.use((req, res, next) => {
 // Import and use routes
 const authRoutes = require('./routes/auth');
 const routes = require('./routes/index');
-const articleRoutes = require('./routes/articles');
 const pagesRoutes = require('./routes/pages');
 const apiRoutes = require('./routes/api');
+const dashboardRoutes = require('./routes/dashboard');
 
 app.use('/', routes);
 app.use('/auth', authRoutes);
-app.use('/articles', articleRoutes);
 app.use('/', pagesRoutes);
 app.use('/api', apiRoutes);
+app.use('/dashboard', dashboardRoutes);
 
 // 404 Error Handling
 app.use((req, res) => {
