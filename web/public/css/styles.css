@@ -7,7 +7,7 @@
   --accent-2: #e43a9b;
   --text: #ffffff;
   --bg: #111;
-  --gradient1: linear-gradient(135deg, #3414e6ce 0%, #e43a9acd 100%);
+  --gradient1: linear-gradient(135deg, #3414e6ae 0%, #3414e6a8 100%);
 
   --nav-collapsed: 60px;
   --nav-expanded: 200px;
@@ -33,6 +33,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Lora", serif;
+
 }
 
 html,
@@ -40,7 +42,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  font-family: "Gowun Dodum", serif;
+  font-family: "Lora", serif;
   /* font-family: 'Metal Mania', cursive, sans-serif; */
   font-size: 1rem;
   background: var(--color-main-bg);
@@ -616,7 +618,6 @@ input[type="submit"]:hover,
 }
 
 .simple-btn {
-  /* font-family: 'Metal Mania', cursive, sans-serif; */
   margin-right: 5px;
   padding: 5px;
   background-color: #ddd;

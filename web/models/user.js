@@ -1,7 +1,8 @@
+const db = require('../utils/db');
+const { v4: uuidv4 } = require('uuid');
 const { Pool } = require('pg');
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-const { v4: uuidv4 } = require('uuid');
 
 const isUUID = (id) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
 
@@ -9,28 +10,25 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL + "?sslmode=require",
 });
 
-// Find user by ID
+// ───── User Lookups ─────
 async function findOne(id) {
   if (!isUUID(id)) throw new Error(`Invalid UUID: ${id}`);
-  const res = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+  const res = await pool.query('SELECT * FROM nextmetal.users WHERE id = $1', [id]);
   if (res.rows.length === 0) throw new Error(`User not found with ID: ${id}`);
   return res.rows[0];
 }
 
-// Find user by email
 async function findByEmail(email) {
-  const res = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
-  if (res.rows.length === 0) throw new Error(`User not found with email: ${email}`);
-  return res.rows[0];
+  const res = await db.query('SELECT * FROM nextmetal.users WHERE email = $1', [email]);
+  return res.rows[0] || null;
 }
 
-// Try ID first, then fallback to email
 async function findByIdOrEmail(identifier) {
   return isUUID(identifier) ? await findOne(identifier) : await findByEmail(identifier);
 }
 
-// Create user and setup associated rows
-async function create({ email, id, password, referralCode = null }) {
+// ───── User Creation ─────
+async function create({ email, id, password, referredBy = null, pubEthAddr, encPrivKey }) {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -38,31 +36,41 @@ async function create({ email, id, password, referralCode = null }) {
   try {
     await client.query('BEGIN');
 
-    // Insert into users
+    // Insert user
     const userResult = await client.query(
-      'INSERT INTO users (email, id, password_hash) VALUES ($1, $2, $3) RETURNING id, email',
-      [email, id, hashedPassword]
+      'INSERT INTO nextmetal.users (email, id, password_hash, referred_by) VALUES ($1, $2, $3, $4) RETURNING id, email',
+      [email, id, hashedPassword, referredBy]
     );
     const userId = userResult.rows[0].id;
 
-    // Log referral usage if provided
-    if (referralCode) {
-      await client.query(
-        'INSERT INTO referral_usages (referred_id, referral_code) VALUES ($1, $2)',
-        [userId, referralCode]
+    // Optionally record referral usage if a code was entered, and the code exists (by value)
+    if (referredBy) {
+      // Find referral_codes.id by code string
+      const codeRes = await client.query(
+        'SELECT id FROM nextmetal.referral_codes WHERE code = $1',
+        [referredBy]
       );
+      if (codeRes.rows.length > 0) {
+        await client.query(
+          'INSERT INTO nextmetal.referral_usages (referred_id, referral_code_id) VALUES ($1, $2)',
+          [userId, codeRes.rows[0].id]
+        );
+      }
     }
 
-    // Create quest row
+
+    // Create user_wallet (if not already exists)
     await client.query(
-      'INSERT INTO user_quests (user_id) VALUES ($1)',
-      [userId]
+      `INSERT INTO nextmetal.user_wallets (user_id, pub_eth_addr, enc_priv_key)
+       VALUES ($1, $2, $3)
+       ON CONFLICT (user_id) DO NOTHING`,
+      [userId, pubEthAddr, encPrivKey]
     );
 
-    // Generate referral code
+    // Generate a unique referral code for this user
     const generatedCode = `REF-${userId.slice(0, 8).toUpperCase()}`;
     await client.query(
-      'INSERT INTO referral_codes (code, owner_id) VALUES ($1, $2)',
+      'INSERT INTO nextmetal.referral_codes (code, owner_id) VALUES ($1, $2)',
       [generatedCode, userId]
     );
 
@@ -76,42 +84,40 @@ async function create({ email, id, password, referralCode = null }) {
   }
 }
 
-// Email verification
+// ───── Email Verification ─────
 async function verifyEmail(id, verificationCode) {
   const res = await pool.query(
-    'SELECT * FROM email_verifications WHERE user_id = $1 AND verification_code = $2 AND expires_at > NOW()',
+    'SELECT * FROM nextmetal.email_verifications WHERE user_id = $1 AND verification_code = $2 AND expires_at > NOW()',
     [id, verificationCode]
   );
   if (res.rows.length === 0) throw new Error('Invalid or expired verification code');
   return res.rows[0];
 }
 
-// Create email verification
 async function createEmailVerification(id) {
   const code = crypto.randomBytes(16).toString('hex');
   const expires = new Date(Date.now() + 3600000);
   const result = await pool.query(
-    'INSERT INTO email_verifications (user_id, verification_code, expires_at) VALUES ($1, $2, $3) RETURNING id',
+    'INSERT INTO nextmetal.email_verifications (user_id, verification_code, expires_at) VALUES ($1, $2, $3) RETURNING id',
     [id, code, expires]
   );
-  return result.rows[0];
+  return { id: result.rows[0].id, verification_code: code, expires_at: expires };
 }
 
-// Create password reset record
+// ───── Password Reset ─────
 async function createPasswordReset(id) {
   const token = crypto.randomBytes(16).toString('hex');
   const expires = new Date(Date.now() + 3600000);
   const result = await pool.query(
-    'INSERT INTO password_resets (user_id, reset_token, expires_at) VALUES ($1, $2, $3) RETURNING id',
+    'INSERT INTO nextmetal.password_resets (user_id, reset_token, expires_at) VALUES ($1, $2, $3) RETURNING id',
     [id, token, expires]
   );
-  return result.rows[0];
+  return { id: result.rows[0].id, reset_token: token, expires_at: expires };
 }
 
-// Validate password reset
 async function findPasswordReset(resetToken) {
   const res = await pool.query(
-    'SELECT * FROM password_resets WHERE reset_token = $1 AND expires_at > NOW()',
+    'SELECT * FROM nextmetal.password_resets WHERE reset_token = $1 AND expires_at > NOW()',
     [resetToken]
   );
   if (res.rows.length === 0) throw new Error('Invalid or expired token');
@@ -126,5 +132,5 @@ module.exports = {
   verifyEmail,
   createEmailVerification,
   createPasswordReset,
-  findPasswordReset
+  findPasswordReset,
 };
