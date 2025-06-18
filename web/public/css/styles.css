@@ -1623,7 +1623,7 @@ label {
   padding-top: 100px;
   background: var(--gradient1);
   background-size: 400% 400%;
-  animation: thunderFlash 10s ease-in-out infinite;
+  /* animation: thunderFlash 10s ease-in-out infinite; */
   /* your custom clip-path: */
   clip-path: polygon(0 0,
       0 calc(100% - 152px),

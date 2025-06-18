@@ -1,117 +1,124 @@
-// app.js
-const express = require('express');
-const session = require('express-session');
-const path = require('path');
-const passport = require('passport');
-const { Pool } = require('pg');
-const LocalStrategy = require('passport-local').Strategy;
-const bcrypt = require('bcryptjs');
-const { v4: uuidv4 } = require('uuid');
+// app.js  ── Next Metal MVP (2025)
+require('dotenv').config();
 
-const User = require('./models/user');
+const path            = require('path');
+const express         = require('express');
+const session         = require('express-session');
+const passport        = require('passport');
+const PgPool          = require('pg').Pool;
+const PgSession       = require('connect-pg-simple')(session);
+const LocalStrategy   = require('passport-local').Strategy;
+const bcrypt          = require('bcryptjs');
+
+const User            = require('./models/user');
+const routes          = require('./routes/index');
+const authRoutes      = require('./routes/auth');
+const pagesRoutes     = require('./routes/pages');
+const apiRoutes       = require('./routes/api');
+const dashboardRoutes = require('./routes/dashboard');
+
 const app = express();
 
-// Database connection
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
+/*───────────────────────────────────────────────────────────
+  1.  DATABASE POOL  (shared everywhere)
+───────────────────────────────────────────────────────────*/
+const pool = new PgPool({
+  connectionString: process.env.DATABASE_URL + '?sslmode=require',
+  ssl: { rejectUnauthorized: false }
 });
 
-// Middleware to parse form data
+/* 2.  CORE MIDDLEWARE */
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'your-secret-key',
-  resave: false,
-  saveUninitialized: false
-}));
 
-// Passport Setup
-passport.use(new LocalStrategy(
-  async (username, password, done) => {
-    try {
-      const user = await User.findByEmail(username);
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      const isMatch = await bcrypt.compare(password, user.password_hash);
-      if (!isMatch) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
-    } catch (err) {
-      return done(err);
+app.use(
+  session({
+    store: new PgSession({
+      pool,                     // reuse pg Pool
+      schemaName: 'nextmetal',  // <<< important: session table lives here
+      tableName: 'session',     // default, but explicit is nice
+      createTableIfMissing: true
+    }),
+    secret: process.env.SESSION_SECRET || 'nextmetal-dev-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 7 * 24 * 60 * 60 * 1000,      // 1 week
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production'
     }
-  }
-));
+  })
+);
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
+/* 3.  PASSPORT LOCAL STRATEGY */
+passport.use(
+  new LocalStrategy(
+    { usernameField: 'email', passwordField: 'password' },
+    async (email, password, done) => {
+      try {
+        const user = await User.findByEmail(email.trim().toLowerCase());
+        if (!(await bcrypt.compare(password, user.password_hash))) {
+          return done(null, false, { message: 'Incorrect credentials' });
+        }
+        return done(null, user);
+      } catch (err) {
+        // treat “not found” as bad credentials, everything else as error
+        if (/User not found/.test(err.message)) {
+          return done(null, false, { message: 'Incorrect credentials' });
+        }
+        return done(err);
+      }
+    }
+  )
+);
 
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findOne(id);
-    done(null, user);
-  } catch (err) {
-    done(err, null);
-  }
+passport.serializeUser((u, cb) => cb(null, u.id));
+passport.deserializeUser(async (id, cb) => {
+  try   { cb(null, await User.findOne(id)); }
+  catch (e) { cb(e); }
 });
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Middleware to make user available in templates
+/* 4.  LOCALS  (user available to every EJS view) */
 app.use((req, res, next) => {
-  res.locals.user = req.user;
+  res.locals.user = req.user ?? null;
   next();
 });
 
-// Set the view engine to EJS
+/* 5.  VIEW ENGINE / STATIC */
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
-
-// Serve static files
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Remember the return URL
-app.use((req, res, next) => {
+/* 6.  REMEMBER "return to" FOR PROTECTED PAGES */
+app.use((req, _res, next) => {
   const skip =
     req.path.startsWith('/members') ||
-    req.path.startsWith('/auth');
+    req.path.startsWith('/auth')    ||
+    req.xhr ||
+    !req.accepts('html');
 
-  if (
-    !req.isAuthenticated?.() &&
-    req.method === 'GET' &&
-    req.accepts('html') &&
-    !req.xhr &&
-    !skip
-  ) {
+  if (!skip && !req.isAuthenticated()) {
     req.session.returnTo = req.originalUrl;
   }
   next();
 });
 
-// Import and use routes
-const authRoutes = require('./routes/auth');
-const routes = require('./routes/index');
-const pagesRoutes = require('./routes/pages');
-const apiRoutes = require('./routes/api');
-const dashboardRoutes = require('./routes/dashboard');
-
+/* 7.  ROUTES */
 app.use('/', routes);
 app.use('/auth', authRoutes);
 app.use('/', pagesRoutes);
 app.use('/api', apiRoutes);
 app.use('/dashboard', dashboardRoutes);
 
-// 404 Error Handling
-app.use((req, res) => {
-  res.status(404).render('404', { title: 'Page Not Found' });
-});
+/* 8.  ERROR HANDLERS */
+app.use((req, res) =>
+  res.status(404).render('404', { title: 'Page Not Found' })
+);
 
-// General error handling
-app.use((err, req, res, next) => {
+app.use((err, _req, res, _next) => {
   console.error(err.stack);
   res.status(500).render('500', { title: 'Server Error' });
 });

@@ -23,7 +23,7 @@ final class AuthViewModel: ObservableObject {
             do {
                 let u = try await AuthService.login(email: email,
                                                     password: password,
-                                                    via: app)
+                                                    using: app)
                 self?.user = u
                 self?.errorMessage = nil
                 if remember {

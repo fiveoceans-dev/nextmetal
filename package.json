@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@blueprintjs/core": "^5.19.0",
-    "@blueprintjs/icons": "^5.22.0",
-    "reactflow": "^11.11.4"
-  }
-}

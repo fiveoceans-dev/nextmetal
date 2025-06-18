@@ -7,7 +7,7 @@ const port = process.env.PORT || 3001;
 
 // Database connection
 const databaseUrl = process.env.DATABASE_URL;
-console.log("Connected to database:", databaseUrl);
+console.log("Connected to database:");
 
 
 app.listen(port, () => {
