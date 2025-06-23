@@ -4,9 +4,7 @@ const router  = express.Router();
 const db      = require('../utils/db');          // ← your pg-pool wrapper
 const guard   = require('../middlewares/isAuthenticated');
 
-/*───────────────────────────────────────────────────────────
-  Helpers
-───────────────────────────────────────────────────────────*/
+/* Helpers */
 const TITLE   = 'Next Metal – ';
 
 /** Sum of a user’s points (simple aggregate, no materialised view needed) */
@@ -50,9 +48,7 @@ async function getReferrals(userId) {
   return rows;
 }
 
-/*───────────────────────────────────────────────────────────
-  Per-section data loaders
-───────────────────────────────────────────────────────────*/
+/* Per-section data loaders */
 const loaders = {
   async dashboard(user) {
     return {
@@ -70,9 +66,7 @@ const loaders = {
   functions: async () => ({ projects: [] }),
 };
 
-/*───────────────────────────────────────────────────────────
-  Core renderer (PJAX-aware)
-───────────────────────────────────────────────────────────*/
+/* Core renderer (PJAX-aware) */
 async function renderSection(req, res) {
   const section = req.params.section ?? 'dashboard';
   const load    = loaders[section];
@@ -102,9 +96,7 @@ async function renderSection(req, res) {
   }
 }
 
-/*───────────────────────────────────────────────────────────
-  Routes
-───────────────────────────────────────────────────────────*/
+/* Routes */
 router.use(guard);
 
 /* default → “dashboard” section */

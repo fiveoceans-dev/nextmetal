@@ -1,123 +1,110 @@
-// app.js  ── Next Metal MVP (2025)
+// app.js – Next Metal MVP (2025)
 require('dotenv').config();
 
-const path            = require('path');
-const express         = require('express');
-const session         = require('express-session');
-const passport        = require('passport');
-const PgPool          = require('pg').Pool;
-const PgSession       = require('connect-pg-simple')(session);
-const LocalStrategy   = require('passport-local').Strategy;
-const bcrypt          = require('bcryptjs');
+const path      = require('path');
+const express   = require('express');
+const session   = require('express-session');
+const passport  = require('passport');
+const PgPool    = require('pg').Pool;
+const PgSession = require('connect-pg-simple')(session);
+const LocalStrat= require('passport-local').Strategy;
+const helmet    = require('helmet');
+const morgan    = require('morgan');
+const bcrypt    = require('bcryptjs');
 
-const User            = require('./models/user');
-const routes          = require('./routes/index');
-const authRoutes      = require('./routes/auth');
+const User = require('./models/user');
+const routes = require('./routes/index');
+const { html: authWeb, api: authApi } = require('./routes/auth');
 const pagesRoutes     = require('./routes/pages');
-const apiRoutes       = require('./routes/api');
 const dashboardRoutes = require('./routes/dashboard');
 
 const app = express();
 
-/*───────────────────────────────────────────────────────────
-  1.  DATABASE POOL  (shared everywhere)
-───────────────────────────────────────────────────────────*/
+
+/* db pool (shared by connect-pg-simple) */
 const pool = new PgPool({
-  connectionString: process.env.DATABASE_URL + '?sslmode=require',
+  connectionString: `${process.env.DATABASE_URL}?sslmode=require`,
   ssl: { rejectUnauthorized: false }
 });
 
-/* 2.  CORE MIDDLEWARE */
+/* trust proxy if behind nginx / caddy */
+if (process.env.TRUST_PROXY) app.set('trust proxy', 1);
+
+/* global hardening and logs */
+app.use(helmet());
+app.use(morgan('tiny'));
+
+/* body parsers */
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use(
-  session({
-    store: new PgSession({
-      pool,                     // reuse pg Pool
-      schemaName: 'nextmetal',  // <<< important: session table lives here
-      tableName: 'session',     // default, but explicit is nice
-      createTableIfMissing: true
-    }),
-    secret: process.env.SESSION_SECRET || 'nextmetal-dev-secret',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: 7 * 24 * 60 * 60 * 1000,      // 1 week
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production'
-    }
-  })
-);
+/* session store (schema = nextmetal) */
+app.use(session({
+  store: new PgSession({ pool, schemaName: 'nextmetal', tableName: 'session', createTableIfMissing: true }),
+  secret: process.env.SESSION_SECRET || 'nextmetal-dev-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production'
+  }
+}));
 
-/* 3.  PASSPORT LOCAL STRATEGY */
-passport.use(
-  new LocalStrategy(
-    { usernameField: 'email', passwordField: 'password' },
-    async (email, password, done) => {
-      try {
-        const user = await User.findByEmail(email.trim().toLowerCase());
-        if (!(await bcrypt.compare(password, user.password_hash))) {
-          return done(null, false, { message: 'Incorrect credentials' });
-        }
-        return done(null, user);
-      } catch (err) {
-        // treat “not found” as bad credentials, everything else as error
-        if (/User not found/.test(err.message)) {
-          return done(null, false, { message: 'Incorrect credentials' });
-        }
-        return done(err);
-      }
+/* passport local → shared for HTML + JWT flows */
+passport.use(new LocalStrat(
+  { usernameField: 'email', passwordField: 'password' },
+  async (email, password, done) => {
+    try {
+      const u = await User.findByEmail(email.trim().toLowerCase());
+      if (!(await bcrypt.compare(password, u.password_hash)))
+        return done(null, false, { message: 'bad-creds' });
+      return done(null, u);
+    } catch (e) {
+      if (/User not found/.test(e.message))
+        return done(null, false, { message: 'bad-creds' });
+      return done(e);
     }
-  )
-);
-
+  }
+));
 passport.serializeUser((u, cb) => cb(null, u.id));
 passport.deserializeUser(async (id, cb) => {
-  try   { cb(null, await User.findOne(id)); }
+  try { cb(null, await User.findOne(id)); }
   catch (e) { cb(e); }
 });
-
 app.use(passport.initialize());
 app.use(passport.session());
 
-/* 4.  LOCALS  (user available to every EJS view) */
-app.use((req, res, next) => {
-  res.locals.user = req.user ?? null;
-  next();
-});
+/* make user available to all EJS templates */
+app.use((req, res, next) => { res.locals.user = req.user ?? null; next(); });
 
-/* 5.  VIEW ENGINE / STATIC */
+/* view engine & static assets */
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-/* 6.  REMEMBER "return to" FOR PROTECTED PAGES */
+/* remember “return-to” for unauthenticated html GETs */
 app.use((req, _res, next) => {
-  const skip =
-    req.path.startsWith('/members') ||
-    req.path.startsWith('/auth')    ||
-    req.xhr ||
-    !req.accepts('html');
-
-  if (!skip && !req.isAuthenticated()) {
-    req.session.returnTo = req.originalUrl;
-  }
+  const skip =  req.path.startsWith('/members') ||
+                req.path.startsWith('/auth')    ||
+                req.path.startsWith('/api')     ||
+                req.xhr || !req.accepts('html');
+  if (!skip && !req.isAuthenticated?.()) req.session.returnTo = req.originalUrl;
   next();
 });
 
-/* 7.  ROUTES */
-app.use('/', routes);
-app.use('/auth', authRoutes);
-app.use('/', pagesRoutes);
-app.use('/api', apiRoutes);
-app.use('/dashboard', dashboardRoutes);
+/* routes */
+app.use('/',            routes);
+app.use('/auth',        authWeb);
+app.use('/api/auth',    authApi);
+app.use('/api/v1', require('./routes/api.v1'));
+app.use('/',            pagesRoutes);
+app.use('/dashboard',   dashboardRoutes);
 
-/* 8.  ERROR HANDLERS */
+/* fallbacks */
 app.use((req, res) =>
   res.status(404).render('404', { title: 'Page Not Found' })
 );
-
 app.use((err, _req, res, _next) => {
   console.error(err.stack);
   res.status(500).render('500', { title: 'Server Error' });

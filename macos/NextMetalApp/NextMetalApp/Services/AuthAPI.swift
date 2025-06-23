@@ -9,6 +9,13 @@ import Security
 /* DTO */
 struct LoginReply: Decodable { let token: String }
 
+// AuthAPI.swift  (add at top, after imports)
+#if DEBUG
+private func dbg(_ items: Any...) { items.forEach { print("-", $0) } }
+#else
+private func dbg(_: Any...) {}
+#endif
+
 /* Keychain */
 private enum KeychainStore {
     private static let service = "io.nextmetal.app"
@@ -22,22 +29,35 @@ private enum KeychainStore {
             kSecReturnData  as String: true,
             kSecMatchLimit  as String: kSecMatchLimitOne
         ]
+        
         var item: CFTypeRef?
         guard SecItemCopyMatching(q as CFDictionary, &item) == errSecSuccess,
               let d = item as? Data,
               let s = String(data: d, encoding: .utf8) else { return nil }
+        dbg("LOAD keychain status", SecItemCopyMatching(q as CFDictionary, &item))
+
         return s
+        
     }
 
     static func save(_ jwt: String) {
+        
         let q: [String:Any] = [
             kSecClass       as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
             kSecAttrAccount as String: key,
-            kSecValueData   as String: Data(jwt.utf8)
         ]
         SecItemDelete(q as CFDictionary)
-        SecItemAdd   (q as CFDictionary, nil)
+
+        let addQ: [String:Any] = [
+            kSecClass         as String: kSecClassGenericPassword,
+            kSecAttrService   as String: service,
+            kSecAttrAccount   as String: key,
+            kSecValueData     as String: Data(jwt.utf8),
+            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
+        ]
+        let status = SecItemAdd(addQ as CFDictionary, nil)
+        dbg("SAVE keychain status", status)          // should now print 0
     }
 
     static func clear() {
@@ -52,28 +72,52 @@ private enum KeychainStore {
 
 /* API */
 enum AuthAPI {
-    private static let base = URL(string: "http://localhost:3001")!
+    private static let base = URL(string: "http://127.0.0.1:3001")!
     private static let ses  = URLSession.shared
 
+    // MARK: - Login
     static func login(email: String, password: String) async throws {
         let req = try makeRequest(path: "/api/auth/login",
                                   method: "POST",
                                   json: ["email": email, "password": password])
-        let (data, _) = try await ses.data(for: req)
+
+        let (data, resp) = try await ses.data(for: req)
+
+        if let http = resp as? HTTPURLResponse {
+            dbg("RES login", http.statusCode)
+        }
+        dbg("RAW", String(data: data, encoding: .utf8) ?? "<non-utf8>")
+
         let rep = try JSONDecoder().decode(LoginReply.self, from: data)
+        dbg("PARSED token", rep.token.prefix(16), "…")
         KeychainStore.save(rep.token)
     }
 
-    static func logout() { KeychainStore.clear() }
-
+    // MARK: - Profile
     static func profile() async throws -> AppUser {
-        guard let jwt = KeychainStore.jwt else { throw URLError(.userAuthenticationRequired) }
-        var req = URLRequest(url: base.appendingPathComponent("/api/auth/me"))
+        guard let jwt = KeychainStore.jwt else {
+            throw URLError(.userAuthenticationRequired)
+        }
+
+        var req = URLRequest(url: base.appendingPathComponent("/api/auth/profile"))
         req.httpMethod = "GET"
         req.addValue("Bearer \(jwt)", forHTTPHeaderField: "Authorization")
-        let (d, _) = try await ses.data(for: req)
-        return try JSONDecoder().decode(AppUser.self, from: d)
+        req.addValue("application/json", forHTTPHeaderField: "Accept")
+        dbg("REQ", "GET", req.url!.absoluteString)
+
+        let (data, resp) = try await ses.data(for: req)
+        guard let http = resp as? HTTPURLResponse,
+              200..<300 ~= http.statusCode else {
+            throw URLError(.badServerResponse)
+        }
+        dbg("RES profile", http.statusCode)
+        dbg("RAW", String(data: data, encoding: .utf8) ?? "<binary>")
+
+        // decode directly
+        return try JSONDecoder().decode(AppUser.self, from: data)
     }
+
+    static func logout() { KeychainStore.clear() }
 
     private static func makeRequest(path: String,
                                     method: String,
@@ -82,6 +126,11 @@ enum AuthAPI {
         r.httpMethod = method
         r.addValue("application/json", forHTTPHeaderField: "Content-Type")
         r.httpBody = try JSONSerialization.data(withJSONObject: json)
+
+        // ↓↓↓  new  ↓↓↓
+        dbg("REQ", method, r.url?.absoluteString ?? "")
+        dbg("BODY", json)
+
         return r
     }
 }
