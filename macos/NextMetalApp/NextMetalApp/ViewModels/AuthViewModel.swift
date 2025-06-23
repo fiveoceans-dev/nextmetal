@@ -6,7 +6,7 @@
 import Foundation
 
 @MainActor
-final class AuthVM: ObservableObject {
+final class AuthViewModel: ObservableObject {
     @Published var user     : AppUser? = nil
     @Published var remember : Bool     = UserDefaults.standard.bool(forKey: "rememberEmailOn")
     @Published var errorMsg : String?  = nil

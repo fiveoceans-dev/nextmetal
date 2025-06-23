@@ -1,35 +1,52 @@
+// DockerView.swift
+//  NextMetalApp
+
 import SwiftUI
 
 struct DockerView: View {
-    @StateObject private var vm = DockerVM()   // DockerVM conforms to ObservableObject
+    @StateObject private var vm = DockerViewModel()
 
     var body: some View {
-        VStack {
-            HStack {
-                Button("Refresh") { vm.start() }
-                Spacer()
-                Text(vm.versionText)
-                    .font(.footnote)
-                    .monospaced()
-            }
-            .padding(.bottom, 8)
+        VStack(alignment: .leading, spacing: 16) {
 
+            // Header bar
+            HStack(spacing: 12) {
+                Text("DOCKER\\.NODE")
+                    .font(Orbitron.mono(size: 14, weight: .semibold))
+                    .foregroundColor(.cyberYellow)
+                    .neon()
+
+                Text(vm.version)
+                    .font(Orbitron.mono(size: 11))
+                    .foregroundColor(.cyberCyan)
+
+                Spacer()
+
+                Button("↻ REFRESH") { vm.refreshAll() }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.small)
+            }
+
+            // Error banner
             if let err = vm.errorMessage {
                 Text(err)
-                    .foregroundStyle(.red)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .font(Orbitron.mono(size: 11))
+                    .foregroundColor(.cyberRed)
             }
 
+            // Grid-panel
             Table(vm.containers) {
-                TableColumn("ID",    value: \.id).width(min: 80, ideal: 120)
-                TableColumn("Image", value: \.image)
-                TableColumn("Status",value: \.status)
-                TableColumn("Ports", value: \.ports)
-                TableColumn("Name",  value: \.name)
+                TableColumn("ID",     value: \.shortID)
+                TableColumn("IMAGE",  value: \.image)
+                TableColumn("STATUS", value: \.status)
+                TableColumn("STATE",  value: \.state)
+                TableColumn("NAMES",  value: \.names)
             }
+            .tableStyle(.inset(alternatesRowBackgrounds: true))
+            .background(Color.cyberGrid.opacity(0.15))
+            .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
         }
-        .padding()
-        .onAppear { vm.start() }
-        .onDisappear { vm.stop() }
+        .padding(20)
+        .foregroundStyle(.white.opacity(0.9))
     }
 }

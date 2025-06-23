@@ -6,7 +6,13 @@
 import SwiftUI
 struct RewardsView: View {
     var body: some View {
-        Text("Quests & points UI here")
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        ZStack {
+            Text("REWARDS\\.MODULE — WIP")
+                .font(Orbitron.mono(size: 18))
+                .foregroundColor(.cyberCyan)
+                .neon(.cyberCyan)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
+

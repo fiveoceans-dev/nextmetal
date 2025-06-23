@@ -2,68 +2,46 @@
 //  DockerVM.swift
 //  NextMetalApp
 //
-
 import Foundation
+import SwiftUI
 
 @MainActor
-final class DockerVM: ObservableObject {
+final class DockerViewModel: ObservableObject {
 
-    // ── Published state ────────────────────────────────────────────────
-    @Published var containers : [DockerContainer] = []
-    @Published var versionText: String = ""
+    @Published var version     = "–"
+    @Published var images      = [DockerImage]()
+    @Published var containers  = [DockerContainer]()
     @Published var errorMessage: String?
-
-    // ── Internals ───────────────────────────────────────────────────────
-    private var ticker : Task<Void, Never>?
-
-    /// Start the 5-second auto-refresh loop.
-    func start() {
-        guard ticker == nil else { return }
-        ticker = Task { await loop() }
-    }
-
-    /// Stop the loop (call from `onDisappear`).
-    func stop() {
-        ticker?.cancel()
-        ticker = nil
-    }
     
-    func manualRefresh() {
-        Task { await refresh() }
-    }
-
-    /// One-shot CLI actions (pull / run / stop / rm)
-    func pull  (image: String) { fire { try await DockerCLI.pull  (image) } }
-    func run   (image: String) { fire { try await DockerCLI.run   (image) } }
-    func stop  (id: String)    { fire { try await DockerCLI.stop  (id)    } }
-    func remove(id: String)    { fire { try await DockerCLI.remove(id)    } }
-
-    // MARK: – Loop & helpers ---------------------------------------------
-
-    private func loop() async {
-        while !Task.isCancelled {
-            await refresh()
-            try? await Task.sleep(for: .seconds(5))
-        }
-    }
-
-    private func refresh() async {
-        do {
-            async let v  = DockerCLI.version()
-            async let ls = DockerCLI.list()
-            versionText  = try await v
-            containers   = try await ls
-            errorMessage = nil
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    /// Fire-and-forget wrapper used by pull / run / stop / rm.
-    private func fire(_ block: @escaping () async throws -> Void) {
+    func refreshAll() {
         Task {
-            do   { try await block(); await refresh() }
-            catch { errorMessage = error.localizedDescription }
+            do {
+                async let v  = DockerModel.version()
+                async let im = DockerModel.images()
+                async let ct = DockerModel.containers()
+                version     = try await v
+                images      = try await im
+                containers  = try await ct
+                errorMessage       = nil
+            } catch {
+                self.errorMessage  = error.localizedDescription
+            }
+        }
+    }
+
+    func start(_ c: DockerContainer) { mutate { try await DockerModel.start(container: c.id) } }
+    func stop (_ c: DockerContainer) { mutate { try await DockerModel.stop (container: c.id) } }
+
+    // Helper: run an async op then refresh the container list
+    private func mutate(_ op: @escaping () async throws -> Void) {
+        Task {
+            do {
+                try await op()
+                try await Task.sleep(for: .milliseconds(300))
+                self.containers = try await DockerModel.containers()
+            } catch {
+                self.errorMessage = error.localizedDescription
+            }
         }
     }
 }
