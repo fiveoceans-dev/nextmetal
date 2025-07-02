@@ -15,7 +15,7 @@ struct LoginView: View {
     var body: some View {
         VStack(spacing: 24) {
 
-            Text("NEXTMETAL.DESKTOP")
+            Text("NEXTMETAL.NODE")
                 .font(Orbitron.mono(size: 22, weight: .bold))
                 .foregroundColor(.cyberYellow)
                 .neon()

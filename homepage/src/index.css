@@ -1,0 +1,116 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. */
+
+@layer base {
+  :root {
+    --background: 10 10% 4%;
+    --foreground: 60 100% 90%;
+
+    --card: 10 10% 6%;
+    --card-foreground: 60 100% 90%;
+
+    --popover: 10 10% 6%;
+    --popover-foreground: 60 100% 90%;
+
+    --primary: 200 100% 50%;
+    --primary-foreground: 0 0% 0%;
+
+    --secondary: 60 100% 50%;
+    --secondary-foreground: 0 0% 0%;
+
+    --muted: 10 10% 15%;
+    --muted-foreground: 200 50% 70%;
+
+    --accent: 60 100% 50%;
+    --accent-foreground: 0 0% 0%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 200 100% 30%;
+    --input: 200 100% 30%;
+    --ring: 200 100% 50%;
+
+    --radius: 0.25rem;
+
+    --sidebar-background: 10 10% 6%;
+    --sidebar-foreground: 60 100% 90%;
+    --sidebar-primary: 200 100% 50%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 10 10% 15%;
+    --sidebar-accent-foreground: 60 100% 90%;
+    --sidebar-border: 200 100% 30%;
+    --sidebar-ring: 200 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-mono;
+    background-image: 
+      radial-gradient(circle at 25% 25%, rgba(0, 191, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+      linear-gradient(45deg, transparent 49%, rgba(0, 191, 255, 0.03) 50%, transparent 51%);
+  }
+}
+
+@layer components {
+  .cyber-grid {
+    background-image: 
+      linear-gradient(rgba(0, 191, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 191, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+  
+  .cyber-border {
+    border: 1px solid rgba(0, 191, 255, 0.3);
+    box-shadow: 
+      0 0 10px rgba(0, 191, 255, 0.2),
+      inset 0 0 10px rgba(0, 191, 255, 0.1);
+  }
+  
+  .cyber-panel {
+    background: linear-gradient(135deg, rgba(0, 191, 255, 0.05) 0%, rgba(255, 215, 0, 0.05) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 191, 255, 0.2);
+  }
+  
+  .glitch-text {
+    position: relative;
+  }
+  
+  .glitch-text::before,
+  .glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .glitch-text::before {
+    animation: glitch 0.3s ease-in-out infinite alternate-reverse;
+    color: #ff073a;
+    z-index: -1;
+  }
+  
+  .glitch-text::after {
+    animation: glitch 0.3s ease-in-out infinite alternate-reverse;
+    color: #00bfff;
+    z-index: -2;
+  }
+
+  .bg-gradient-radial {
+    background: radial-gradient(circle, var(--tw-gradient-stops));
+  }
+}
