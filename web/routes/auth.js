@@ -1,3 +1,5 @@
+// routes/auth.js
+
 /* session + JWT auth (HTML ⇒ /auth , JSON ⇒ /api/auth) */
 require('dotenv').config();
 
@@ -75,7 +77,9 @@ html.post('/register', async (req, res, next) => {
 
 /* POST /auth/login */
 html.post('/login',
-  passport.authenticate('local', { failureRedirect: '/members?error=Invalid+credentials' }),
+  passport.authenticate('local', {
+    failureRedirect: '/members?error=Invalid+credentials',
+    session: true }),
   (req, res) => finish(req, res)
 );
 
