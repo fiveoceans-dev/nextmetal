@@ -76,10 +76,27 @@ html.post('/register', async (req, res, next) => {
 });
 
 /* POST /auth/login */
-html.post('/login',
-  passport.authenticate('local', {failureRedirect: '/members?error=Invalid+credentials' }),
-  (req, res) => finish(req, res)
-);
+// html.post('/login',
+//   passport.authenticate('local', {
+//     failureRedirect: '/members?error=Invalid+credentials',
+//     session: true }),
+//   (req, res) => finish(req, res)
+// );
+
+html.post('/login', (req, res, next) => {
+  passport.authenticate('local',
+    { failureRedirect: '/members?error=Invalid+credentials', session: true },
+    (err, user, info) => {
+      console.log('[HTML-login] body:', req.body);   // 👀
+      console.log('[HTML-login] err/info:', err, info);
+
+      if (err)   return next(err);
+      if (!user) return;             // Passport already redirected
+
+      req.login(user, err => err ? next(err) : finish(req, res));
+    }
+  )(req, res, next);
+});
 
 /* GET /auth/logout */
 html.get('/logout', (req, res, next) =>
