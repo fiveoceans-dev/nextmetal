@@ -77,9 +77,7 @@ html.post('/register', async (req, res, next) => {
 
 /* POST /auth/login */
 html.post('/login',
-  passport.authenticate('local', {
-    failureRedirect: '/members?error=Invalid+credentials',
-    session: true }),
+  passport.authenticate('local', {failureRedirect: '/members?error=Invalid+credentials' }),
   (req, res) => finish(req, res)
 );
 
