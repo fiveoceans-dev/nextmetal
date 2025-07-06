@@ -1,4 +1,4 @@
-// app.js – Next Metal MVP (2025)
+// app.js
 require('dotenv').config();
 
 const path      = require('path');
@@ -11,13 +11,14 @@ const LocalStrat= require('passport-local').Strategy;
 const helmet    = require('helmet');
 const morgan    = require('morgan');
 const bcrypt    = require('bcryptjs');
+const cookieParser = require('cookie-parser');
 
 const User = require('./models/user');
 const routes = require('./routes/index');
 const { html: authWeb, api: authApi } = require('./routes/auth');
 const pagesRoutes     = require('./routes/pages');
+const { requireJwt } = require('./middleware/jwt');
 const dashboardRoutes = require('./routes/dashboard');
-
 const app = express();
 
 
@@ -28,11 +29,15 @@ const pool = new PgPool({
 });
 
 /* trust proxy if behind nginx / caddy */
-if (process.env.TRUST_PROXY) app.set('trust proxy', 1);
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+}
+
 
 /* global hardening and logs */
 app.use(helmet());
 app.use(morgan('tiny'));
+app.use(cookieParser());
 
 /* body parsers */
 app.use(express.urlencoded({ extended: true }));
@@ -99,7 +104,7 @@ app.use('/auth',        authWeb);
 app.use('/api/auth',    authApi);
 app.use('/api/v1', require('./routes/api.v1'));
 app.use('/',            pagesRoutes);
-app.use('/dashboard',   dashboardRoutes);
+app.use('/dashboard', requireJwt, dashboardRoutes);
 
 /* fallbacks */
 app.use((req, res) =>

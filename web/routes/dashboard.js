@@ -2,7 +2,7 @@
 const express = require('express');
 const router  = express.Router();
 const db      = require('../utils/db');          // ← your pg-pool wrapper
-const guard   = require('../middlewares/isAuthenticated');
+const guard   = require('../middleware/isAuthenticated');
 
 /* Helpers */
 const TITLE   = 'Next Metal – ';
