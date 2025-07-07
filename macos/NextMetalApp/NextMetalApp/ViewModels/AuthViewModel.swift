@@ -1,5 +1,5 @@
 //
-//  AuthVM.swift
+//  AuthViewModel.swift
 //  NextMetalApp
 //
 
@@ -7,40 +7,80 @@ import Foundation
 
 @MainActor
 final class AuthViewModel: ObservableObject {
-    @Published var user     : AppUser? = nil
-    @Published var remember : Bool     = UserDefaults.standard.bool(forKey: "rememberEmailOn")
-    @Published var errorMsg : String?  = nil
 
-    var cachedEmail: String {
-        get { UserDefaults.standard.string(forKey: "rememberedEmail") ?? "" }
-        set { UserDefaults.standard.set(newValue, forKey: "rememberedEmail") }
+    // ───────── Public state ─────────
+    @Published var user: AppUser?                = nil
+    @Published var remember                     : Bool
+    @Published var errorMessage                 : String? = nil
+    @Published var isBusy                       : Bool    = false   // <- optional spinner
+
+    // ───────── Init ─────────
+    init() {
+        // pull remember-me state once
+        remember = UserDefaults.standard.bool(forKey: Keys.rememberOn)
     }
 
+    // MARK: – Login / Logout ----------------------------------------------
+
+    /// Log-in and store the JWT (no profile call).
     func login(email: String, password: String) {
-        Task {
+        isBusy = true
+        Task { @MainActor in
+            defer { isBusy = false }
             do {
-                try await AuthAPI.login(email: email, password: password)
-                let profile = try await AuthAPI.profile()
-                self.user = profile
-                handleRemember(email: email)
-                errorMsg = nil
-            } catch { errorMsg = error.localizedDescription }
+                user = try await AuthAPI.login(email: email, password: password)
+                persistRemember(email: email)
+                errorMessage = nil
+            } catch {
+                errorMessage = error.localizedDescription
+            }
         }
     }
 
+
+    /// Clears JWT + local state.
     func logout() {
         AuthAPI.logout()
-        user = nil
-        errorMsg = nil
+        user          = nil
+        errorMessage  = nil
     }
 
-    private func handleRemember(email: String) {
-        if remember {
-            cachedEmail = email
-            UserDefaults.standard.set(true, forKey: "rememberEmailOn")
-        } else {
-            UserDefaults.standard.removeObject(forKey: "rememberedEmail")
-            UserDefaults.standard.set(false, forKey: "rememberEmailOn")
+    // MARK: – Profile (lazy) ----------------------------------------------
+
+    /// Call this whenever you actually need the user record.
+    func refreshProfile() {
+        isBusy = true
+        Task {
+            defer { isBusy = false }
+            do {
+                user         = try await AuthAPI.profile()
+                errorMessage = nil
+            } catch {
+                errorMessage = error.localizedDescription
+            }
         }
+    }
+
+    // MARK: – Private helpers ---------------------------------------------
+
+    private func persistRemember(email: String) {
+        if remember {
+            UserDefaults.standard.set(true,  forKey: Keys.rememberOn)
+            UserDefaults.standard.set(email, forKey: Keys.cachedEmail)
+        } else {
+            UserDefaults.standard.set(false, forKey: Keys.rememberOn)
+            UserDefaults.standard.removeObject(forKey: Keys.cachedEmail)
+        }
+    }
+
+    // quick wrapper around UserDefaults keys
+    private enum Keys {
+        static let rememberOn  = "rememberEmailOn"
+        static let cachedEmail = "rememberedEmail"
+    }
+
+    // Public getter for the login screen
+    var cachedEmail: String {
+        UserDefaults.standard.string(forKey: Keys.cachedEmail) ?? ""
     }
 }

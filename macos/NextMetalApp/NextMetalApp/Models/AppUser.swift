@@ -8,5 +8,5 @@ import Foundation
 struct AppUser: Decodable {
     let id     : String
     let email  : String
-    let points : Int
+    var points: Int? = nil
 }

@@ -7,7 +7,10 @@ import Foundation
 import Security
 
 /* DTO */
-struct LoginReply: Decodable { let token: String }
+struct LoginReply: Decodable {
+    let token: String
+    let user : AppUser
+}
 
 // AuthAPI.swift  (add at top, after imports)
 #if DEBUG
@@ -72,25 +75,25 @@ private enum KeychainStore {
 
 /* API */
 enum AuthAPI {
-    private static let base = URL(string: "http://nextmetal.org:80")!
+    private static let base = URL(string: "https://nextmetal.org")!
     private static let ses  = URLSession.shared
 
     // MARK: - Login
-    static func login(email: String, password: String) async throws {
-        let req = try makeRequest(path: "/api/auth/login",
-                                  method: "POST",
-                                  json: ["email": email, "password": password])
+    static func login(email: String, password: String) async throws -> AppUser {
+        let req = try makeRequest(
+            path: "/api/auth/login",
+            method: "POST",
+            json: ["email": email, "password": password]
+        )
 
         let (data, resp) = try await ses.data(for: req)
+        guard let http = resp as? HTTPURLResponse, (200..<300).contains(http.statusCode)
+        else { throw URLError(.badServerResponse) }
 
-        if let http = resp as? HTTPURLResponse {
-            dbg("RES login", http.statusCode)
-        }
-        dbg("RAW", String(data: data, encoding: .utf8) ?? "<non-utf8>")
+        let reply = try JSONDecoder().decode(LoginReply.self, from: data)
 
-        let rep = try JSONDecoder().decode(LoginReply.self, from: data)
-        dbg("PARSED token", rep.token.prefix(16), "…")
-        KeychainStore.save(rep.token)
+        KeychainStore.save(reply.token)
+        return reply.user
     }
 
     // MARK: - Profile

@@ -14,7 +14,13 @@ import {
   TrendingUp,
   Globe,
   Settings,
-  Shield
+  Shield,
+  Rocket,
+  PiggyBank,
+  Bird,
+  Bean,
+  Droplets,
+  Medal
 } from 'lucide-react';
 
 interface TokenomicsSectionProps {
@@ -34,12 +40,15 @@ const TokenomicsSection: React.FC<TokenomicsSectionProps> = ({ className }) => {
   }, []);
 
   const tokenData: TokenomicsData[] = [
-    { label: 'LIQUIDITY.POOL', value: '400,000,000', percent: 40, color: '#00bfff', icon: Layers },
-    { label: 'DEVELOPMENT', value: '200,000,000', percent: 20, color: '#00bfff', icon: Hammer },
-    { label: 'MARKETING', value: '150,000,000', percent: 15, color: '#00bfff', icon: Megaphone },
-    { label: 'TEAM.RESERVE', value: '100,000,000', percent: 10, color: '#00bfff', icon: Users },
-    { label: 'PARTNERSHIPS', value: '100,000,000', percent: 10, color: '#00bfff', icon: Handshake },
-    { label: 'AIRDROPS', value: '50,000,000', percent: 5, color: '#00bfff', icon: Send }
+    { label: 'ANGELS', value: '50,000,000', percent: 1, color: '#00bfff', icon: Bird },
+    { label: 'SEED', value: '100,000,000', percent: 2, color: '#00bfff', icon: Bean },
+    { label: 'PUBLIC', value: '250,000,000', percent: 5, color: '#00bfff', icon: Users },
+    { label: 'LIQUIDITY', value: '350,000,000', percent: 7, color: '#00bfff', icon: Droplets },
+    { label: 'ROUNDS', value: '500,000,000', percent: 10, color: '#00bfff', icon: Layers },
+    { label: 'ECOSYSTEM', value: '750,000,000', percent: 15, color: '#00bfff', icon: Hammer },
+    { label: 'RESERVE', value: '1,000,000,000', percent: 20, color: '#00bfff', icon: PiggyBank },
+    { label: 'REWARDS', value: '1,000,000,000', percent: 20, color: '#00bfff', icon: Medal },
+    { label: 'PARTNERSHIPS', value: '1,000,000,000', percent: 20, color: '#00bfff', icon: Handshake },
   ];
 
   const getBlockSize = (percent: number): { height: string; width: string } => {
@@ -47,8 +56,8 @@ const TokenomicsSection: React.FC<TokenomicsSectionProps> = ({ className }) => {
     const maxPercent = Math.max(...tokenData.map(item => item.percent));
     const heightRatio = percent / maxPercent;
     return {
-      height: `${Math.max(heightRatio * 300, 80)}px`,
-      width: percent >= 20 ? '100%' : percent >= 10 ? '48%' : '32%'
+      height: `${Math.max(heightRatio * 200, 200)}px`,
+      width: percent >= 20 ? '100%' : percent+15 >= 10 ? '48%' : '32%'
     };
   };
 
@@ -155,12 +164,6 @@ const TokenomicsSection: React.FC<TokenomicsSectionProps> = ({ className }) => {
                       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
                     </div>
                   </div>
-
-                  {/* Side accent */}
-                  <div className="absolute top-1/2 left-0 w-1 h-16 opacity-70 transform -translate-y-1/2" 
-                       style={{backgroundColor: item.color}} />
-                  <div className="absolute top-1/2 right-0 w-1 h-16 opacity-70 transform -translate-y-1/2" 
-                       style={{backgroundColor: item.color}} />
                 </div>
 
                 {/* Glow effect when highlighted */}
@@ -182,28 +185,28 @@ const TokenomicsSection: React.FC<TokenomicsSectionProps> = ({ className }) => {
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm font-mono text-cyber-blue/70">
             <div className="flex items-center space-x-2">
-              <Star size={16} color="#00bfff" />
-              <span>Metal Processing Rights</span>
-            </div>
-            <div className="flex items-center space-x-2">
               <ArrowRightLeft size={16} color="#00bfff" />
-              <span>Network Governance</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <TrendingUp size={16} color="#00bfff" />
-              <span>Staking Rewards</span>
+              <span>Hosting transactions</span>
             </div>
             <div className="flex items-center space-x-2">
               <Globe size={16} color="#00bfff" />
-              <span>Access Protocol</span>
+              <span>Mining rewards</span>
             </div>
             <div className="flex items-center space-x-2">
-              <Settings size={16} color="#00bfff" />
-              <span>Manufacturing Credits</span>
+              <Rocket size={16} color="#00bfff" />
+              <span>AI inference</span>
             </div>
             <div className="flex items-center space-x-2">
               <Shield size={16} color="#00bfff" />
-              <span>Security Validation</span>
+              <span>Privacy score</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <TrendingUp size={16} color="#00bfff" />
+              <span>Staking yield</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Star size={16} color="#00bfff" />
+              <span>Reputation Score</span>
             </div>
           </div>
         </div>

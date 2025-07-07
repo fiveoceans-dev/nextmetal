@@ -44,7 +44,7 @@ const HeroSection = () => {
               <span className="text-xs font-mono text-cyber-yellow">PROTOCOL</span>
             </div>
             
-            <h1 className="text-4xl md:text-6xl font-cyber text-cyber-yellow mb-4 glitch-text tracking-widest" data-text="NEXTMETAL">
+            <h1 className="text-4xl md:text-5xl font-cyber text-cyber-yellow mb-4 glitch-text tracking-widest" data-text="NEXTMETAL">
               NEXTMETAL
             </h1>
             
@@ -65,7 +65,7 @@ const HeroSection = () => {
             <Button 
               className="cyber-border bg-cyber-blue/10 text-cyber-blue hover:bg-cyber-blue hover:text-cyber-black transition-all duration-300 px-8 py-3 font-mono text-lg hover:ring ring-cyber-blue/20"
             >
-              NODE.OPERATOR
+              NODE.OPERATORS
             </Button>
             <Button 
               variant="outline" 

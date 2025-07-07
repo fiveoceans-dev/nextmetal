@@ -11,9 +11,7 @@ const RoadmapSection = () => {
       title: 'FOUNDATION',
       status: 'COMPLETE',
       items: [
-        'Smart Contract Development',
         'Security Audit & Testing',
-        'Website & Branding Launch',
         'Community Building'
       ]
     },
@@ -145,10 +143,6 @@ const RoadmapSection = () => {
               onMouseEnter={() => setHoveredPhase(index)}
               onMouseLeave={() => setHoveredPhase(null)}
             >
-              <div className="absolute top-0 left-0 w-6 h-6 border-l-2 border-t-2 border-cyber-yellow"
-                   style={{clipPath: 'polygon(0 0, 70% 0, 100% 30%, 100% 100%, 0 100%)'}} />
-              <div className="absolute top-0 right-0 w-6 h-6 border-r-2 border-t-2 border-cyber-yellow"
-                   style={{clipPath: 'polygon(30% 0, 100% 0, 100% 100%, 0 100%, 0 30%)'}} />
               
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-cyber-dark border border-cyber-yellow px-3 py-1"
                    style={{clipPath: 'polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%)'}}>
@@ -188,11 +182,8 @@ const RoadmapSection = () => {
               <div className="absolute bottom-0 left-4 right-4 h-px">
                 <div className="flex space-x-2">
                   <div className="flex-1 h-px bg-cyber-yellow" />
-                  <div className="w-2 h-px bg-transparent" />
-                  <div className="flex-1 h-px bg-cyber-yellow" />
-                  <div className="w-2 h-px bg-transparent" />
-                  <div className="flex-1 h-px bg-cyber-yellow" />
                 </div>
+                
               </div>
               
             </Card>

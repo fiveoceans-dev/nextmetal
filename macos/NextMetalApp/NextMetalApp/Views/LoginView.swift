@@ -1,17 +1,23 @@
+//
+//  LoginView.swift
+//  NextMetalApp
+//
+
 import SwiftUI
 
 struct LoginView: View {
-    @ObservedObject var vm: AuthViewModel            // ← make sure the type’s name matches your VM
-    @State private var email: String
-    @State private var password = ""
 
-    // MARK: - Initialiser
+    // MARK: – State & DI
+    @ObservedObject var vm: AuthViewModel
+    @State private var email:    String
+    @State private var password: String = ""
+
     init(vm: AuthViewModel) {
-        self.vm = vm
-        _email  = State(initialValue: vm.cachedEmail)
+        self.vm  = vm
+        _email   = State(initialValue: vm.cachedEmail)   // read-only getter
     }
 
-    // MARK: - UI
+    // MARK: – UI
     var body: some View {
         VStack(spacing: 24) {
 
@@ -20,7 +26,7 @@ struct LoginView: View {
                 .foregroundColor(.cyberYellow)
                 .neon()
 
-            // Credentials
+            // ── credentials ─────────────────────────────────────────────
             Group {
                 TextField("E-MAIL",    text: $email)
                 SecureField("PASSWORD", text: $password)
@@ -31,7 +37,7 @@ struct LoginView: View {
             .cornerRadius(4)
             .font(Orbitron.mono(size: 13))
 
-            // Remember toggle ­– use a style that exists on macOS
+            // ── remember toggle ─────────────────────────────────────────
             Toggle("REMEMBER ME", isOn: $vm.remember)
 #if os(macOS)
                 .toggleStyle(.checkbox)
@@ -42,15 +48,15 @@ struct LoginView: View {
                 .tint(.cyberCyan)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-            // Action
+            // ── action button ───────────────────────────────────────────
             Button("ACCESS") {
                 vm.login(email: email, password: password)
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
 
-            // Error banner
-            if let err = vm.errorMsg {
+            // ── error banner ────────────────────────────────────────────
+            if let err = vm.errorMessage {
                 Text(err)
                     .font(Orbitron.mono(size: 11))
                     .foregroundColor(.cyberRed)
@@ -62,18 +68,9 @@ struct LoginView: View {
     }
 }
 
-// MARK: - Preview helper ----------------------------------------------------
-
-private extension AuthViewModel {
-    /// A benign stub so the preview compiles without talking to the backend.
-    static var previewStub: AuthViewModel {
-        let vm = AuthViewModel()
-        vm.cachedEmail = "user@example.com"
-        return vm
-    }
-}
+// MARK: – Preview
 
 #Preview {
-    LoginView(vm: .previewStub)          // ✅ no placeholder – compiler happy
-        .background(Color.cyberBg)       // optional: match global backdrop
+    LoginView(vm: AuthViewModel())
+        .background(Color.cyberBg)
 }
