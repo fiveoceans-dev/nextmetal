@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		54843BC92E1BBA87005FFF4F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBB58D7E2E151E0400A83EC5 /* Foundation.framework */; };
+		54843BCA2E1BBA96005FFF4F /* OSLog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBB58E1A2E151E0900A83EC5 /* OSLog.framework */; };
+		54843BCB2E1BBA9C005FFF4F /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBB58CBC2E151DFE00A83EC5 /* SwiftUI.framework */; };
+		54843BCC2E1BBAA7005FFF4F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBB58B7F2E151DEE00A83EC5 /* Security.framework */; };
+		54843BCD2E1BBAB7005FFF4F /* Combine.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBB58D782E151E0400A83EC5 /* Combine.framework */; };
 		DBD382A52E19215600BD1416 /* PostgresKit in Frameworks */ = {isa = PBXBuildFile; productRef = DBD382A42E19215600BD1416 /* PostgresKit */; };
 		DBD382A72E19215A00BD1416 /* web3swift in Frameworks */ = {isa = PBXBuildFile; productRef = DBD382A62E19215A00BD1416 /* web3swift */; };
 /* End PBXBuildFile section */
@@ -834,6 +839,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				54843BCD2E1BBAB7005FFF4F /* Combine.framework in Frameworks */,
+				54843BCC2E1BBAA7005FFF4F /* Security.framework in Frameworks */,
+				54843BCB2E1BBA9C005FFF4F /* SwiftUI.framework in Frameworks */,
+				54843BCA2E1BBA96005FFF4F /* OSLog.framework in Frameworks */,
+				54843BC92E1BBA87005FFF4F /* Foundation.framework in Frameworks */,
 				DBD382A52E19215600BD1416 /* PostgresKit in Frameworks */,
 				DBD382A72E19215A00BD1416 /* web3swift in Frameworks */,
 			);
