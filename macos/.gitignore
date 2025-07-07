@@ -1,0 +1,59 @@
+# === Xcode & macOS ===
+.DS_Store
+*.swp
+*.lock
+*.xcuserstate
+
+# === Build artifacts ===
+build/
+DerivedData/
+*.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
+*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+
+# === Xcode user data ===
+
+# === SwiftPM ===
+.swiftpm/
+.build/
+
+# === CocoaPods ===
+Pods/
+Podfile.lock
+Podfile.symlinks/
+vendor/
+
+# === Carthage ===
+Carthage/Build/
+
+# === Fastlane ===
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# === Archives ===
+*.xcarchive
+
+# === Playgrounds ===
+timeline.xctimeline
+playground.xcworkspace
+
+# === Other ===
+*.moved-aside
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# === Xcode Preview Support ===
+.idea/
+*.xcassets/Preview\ Content/
+
+# === Swift Package Manager binary cache ===
+.xcframeworks/
+
+# === Firebase Crashlytics ===
+*.plist
+
+# === Environment files ===
+.env
+
