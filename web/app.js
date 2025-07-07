@@ -15,10 +15,11 @@ const cookieParser = require('cookie-parser');
 
 const User = require('./models/user');
 const routes = require('./routes/index');
-const { html: authWeb, api: authApi } = require('./routes/auth');
 const pagesRoutes     = require('./routes/pages');
 const { requireJwt } = require('./middleware/jwt');
 const dashboardRoutes = require('./routes/dashboard');
+const { html: authWeb, api: authApi } = require('./routes/auth');
+const coreRoutes = require('./routes/core');
 const app = express();
 
 
@@ -102,6 +103,7 @@ app.use((req, _res, next) => {
 app.use('/',            routes);
 app.use('/auth',        authWeb);
 app.use('/api/auth',    authApi);
+app.use('/api/core',    coreRoutes);
 app.use('/api/v1', require('./routes/api.v1'));
 app.use('/',            pagesRoutes);
 app.use('/dashboard', requireJwt, dashboardRoutes);
