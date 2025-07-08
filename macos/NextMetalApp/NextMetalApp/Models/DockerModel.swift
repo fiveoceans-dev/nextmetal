@@ -1,21 +1,22 @@
-// MARK: - DockerModel.swift
+//
+//  DockerModel.swift
+//  NextMetalApp
+//
 
 import Foundation
 import os.log
 
 // MARK: Errors
 enum DockerError: LocalizedError {
-    case notInstalled
-    case daemonDown          // socket missing / daemon not running
-    case forbidden           // permission denied opening socket
+    case notInstalled, daemonDown, forbidden
     case commandFailed(String)
 
     var errorDescription: String? {
         switch self {
-        case .notInstalled:  "Docker CLI not found"
-        case .daemonDown:    "Docker daemon is not running (socket unavailable)"
-        case .forbidden:     "Permission denied when accessing docker.sock"
-        case .commandFailed(let out): out
+        case .notInstalled:            "Docker CLI not found"
+        case .daemonDown:              "Docker daemon is not running"
+        case .forbidden:               "Permission denied when accessing docker.sock"
+        case .commandFailed(let out):  out
         }
     }
 }
@@ -29,17 +30,13 @@ struct DockerImage: Identifiable, Hashable {
 }
 
 struct DockerContainer: Identifiable, Hashable {
-    let id: String
-    let names: String
-    let image: String
-    let status: String
-    let state: String
+    let id: String, names: String, image: String, status: String, state: String
 }
 
-// MARK: DockerModel – thin CLI wrapper
+// MARK: – Thin CLI wrapper
 struct DockerModel {
 
-    // MARK: High‑level API
+    // MARK: Public API
     static func version() async throws -> String {
         try await shell("docker --version").trimmingCharacters(in: .whitespacesAndNewlines)
     }
@@ -64,38 +61,39 @@ struct DockerModel {
         }
     }
 
-    static func pull(image: String, progress: ((Double)->Void)? = nil) async throws {
-        // simple pull, no granular progress – call once at start/end
+    static func pull(image: String, progress: ((Double)->Void)?) async throws {
         progress?(0)
         _ = try await shell("docker pull \(image)")
         progress?(1)
     }
 
+    /// Run container in detached mode; re-uses container if it already exists.
     static func run(image: String) async throws {
-        // run detached container named <image>_app if not already running
-        _ = try? await shell("docker run -d --name \(image)_app \(image)")
-        try? await shell("docker start \(image)_app")
+        let safe = makeSafeName(from: image)
+        let exists = try? await shell("docker container inspect \(safe)_app --format '{{.Name}}'")
+        if exists?.isEmpty ?? true {
+            _ = try await shell("docker run -d --name \(safe)_app \(image)")
+        } else {
+            _ = try await shell("docker start \(safe)_app")
+        }
     }
 
-    static func stopContainer(named name: String) async throws {
-        _ = try? await shell("docker stop \(name)_app")
+    static func stopContainer(image: String) async throws {
+        let safe = makeSafeName(from: image)
+        _ = try? await shell("docker stop \(safe)_app")
     }
 
-    // MARK: – Shell plumbing
-    private static func dockerPath() -> String? {
-        let env = ProcessInfo.processInfo.environment["DOCKER_CLI_PATH"]
-        let cand = [env,
-                    "/opt/homebrew/bin/docker",
-                    "/usr/local/bin/docker",
-                    "/Applications/Docker.app/Contents/Resources/bin/docker"].compactMap { $0 }
-        return cand.first { FileManager.default.isExecutableFile(atPath: $0) }
+    // MARK: Helpers
+    private static func makeSafeName(from repo: String) -> String {
+        repo.replacingOccurrences(of: "[:/]", with: "_", options: .regularExpression)
     }
 
+    // MARK: Shell plumbing
     @discardableResult
     private static func shell(_ raw: String) async throws -> String {
         let bin = dockerPath() ?? (try? whichDocker())
         guard let dockerBin = bin else { throw DockerError.notInstalled }
-        // replace leading token
+
         var comps = raw.split(separator: " ").map(String.init)
         if comps.first == "docker" { comps[0] = dockerBin }
         let cmd = comps.joined(separator: " ")
@@ -108,13 +106,25 @@ struct DockerModel {
         return try await withCheckedThrowingContinuation { cont in
             p.terminationHandler = { _ in
                 let out = String(decoding: pipe.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self)
-                if p.terminationStatus == 0 { cont.resume(returning: out); return }
+                if p.terminationStatus == 0 { cont.resume(returning: out) ; return }
                 if out.contains("permission denied") && out.contains("docker.sock") {
-                    cont.resume(throwing: DockerError.forbidden); return }
-                if out.contains("Is the docker daemon running") { cont.resume(throwing: DockerError.daemonDown); return }
+                    cont.resume(throwing: DockerError.forbidden) ; return
+                }
+                if out.contains("Is the docker daemon running") {
+                    cont.resume(throwing: DockerError.daemonDown) ; return
+                }
                 cont.resume(throwing: DockerError.commandFailed(out))
             }
         }
+    }
+
+    private static func dockerPath() -> String? {
+        let env = ProcessInfo.processInfo.environment["DOCKER_CLI_PATH"]
+        let cand = [env,
+                    "/opt/homebrew/bin/docker",
+                    "/usr/local/bin/docker",
+                    "/Applications/Docker.app/Contents/Resources/bin/docker"].compactMap { $0 }
+        return cand.first { FileManager.default.isExecutableFile(atPath: $0) }
     }
 
     private static func whichDocker() throws -> String? {

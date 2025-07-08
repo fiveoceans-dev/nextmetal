@@ -34,9 +34,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		DB2198812E02697C0056FEEF /* NextMetalApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NextMetalApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		DB2198922E02697D0056FEEF /* NextMetalAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NextMetalAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		DB21989C2E02697D0056FEEF /* NextMetalAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NextMetalAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB2198812E02697C0056FEEF /* NextMetal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NextMetal.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB2198922E02697D0056FEEF /* NextMetalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NextMetalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB21989C2E02697D0056FEEF /* NextMetalUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NextMetalUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DBB58B4B2E151DED00A83EC5 /* libmarisa.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libmarisa.tbd; path = usr/lib/libmarisa.tbd; sourceTree = SDKROOT; };
 		DBB58B4C2E151DED00A83EC5 /* libdl.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libdl.tbd; path = usr/lib/libdl.tbd; sourceTree = SDKROOT; };
 		DBB58B4D2E151DED00A83EC5 /* libpam.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpam.tbd; path = usr/lib/libpam.tbd; sourceTree = SDKROOT; };
@@ -880,9 +880,9 @@
 		DB2198822E02697C0056FEEF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				DB2198812E02697C0056FEEF /* NextMetalApp.app */,
-				DB2198922E02697D0056FEEF /* NextMetalAppTests.xctest */,
-				DB21989C2E02697D0056FEEF /* NextMetalAppUITests.xctest */,
+				DB2198812E02697C0056FEEF /* NextMetal.app */,
+				DB2198922E02697D0056FEEF /* NextMetalTests.xctest */,
+				DB21989C2E02697D0056FEEF /* NextMetalUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1674,9 +1674,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		DB2198802E02697C0056FEEF /* NextMetalApp */ = {
+		DB2198802E02697C0056FEEF /* NextMetal */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DB2198A62E02697D0056FEEF /* Build configuration list for PBXNativeTarget "NextMetalApp" */;
+			buildConfigurationList = DB2198A62E02697D0056FEEF /* Build configuration list for PBXNativeTarget "NextMetal" */;
 			buildPhases = (
 				DB21987D2E02697C0056FEEF /* Sources */,
 				DB21987E2E02697C0056FEEF /* Frameworks */,
@@ -1689,18 +1689,18 @@
 			fileSystemSynchronizedGroups = (
 				DB2198832E02697C0056FEEF /* NextMetalApp */,
 			);
-			name = NextMetalApp;
+			name = NextMetal;
 			packageProductDependencies = (
 				DBD382A42E19215600BD1416 /* PostgresKit */,
 				DBD382A62E19215A00BD1416 /* web3swift */,
 			);
 			productName = NextMetalApp;
-			productReference = DB2198812E02697C0056FEEF /* NextMetalApp.app */;
+			productReference = DB2198812E02697C0056FEEF /* NextMetal.app */;
 			productType = "com.apple.product-type.application";
 		};
-		DB2198912E02697D0056FEEF /* NextMetalAppTests */ = {
+		DB2198912E02697D0056FEEF /* NextMetalTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DB2198A92E02697D0056FEEF /* Build configuration list for PBXNativeTarget "NextMetalAppTests" */;
+			buildConfigurationList = DB2198A92E02697D0056FEEF /* Build configuration list for PBXNativeTarget "NextMetalTests" */;
 			buildPhases = (
 				DB21988E2E02697D0056FEEF /* Sources */,
 				DB21988F2E02697D0056FEEF /* Frameworks */,
@@ -1714,16 +1714,16 @@
 			fileSystemSynchronizedGroups = (
 				DB2198952E02697D0056FEEF /* NextMetalAppTests */,
 			);
-			name = NextMetalAppTests;
+			name = NextMetalTests;
 			packageProductDependencies = (
 			);
 			productName = NextMetalAppTests;
-			productReference = DB2198922E02697D0056FEEF /* NextMetalAppTests.xctest */;
+			productReference = DB2198922E02697D0056FEEF /* NextMetalTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		DB21989B2E02697D0056FEEF /* NextMetalAppUITests */ = {
+		DB21989B2E02697D0056FEEF /* NextMetalUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DB2198AC2E02697D0056FEEF /* Build configuration list for PBXNativeTarget "NextMetalAppUITests" */;
+			buildConfigurationList = DB2198AC2E02697D0056FEEF /* Build configuration list for PBXNativeTarget "NextMetalUITests" */;
 			buildPhases = (
 				DB2198982E02697D0056FEEF /* Sources */,
 				DB2198992E02697D0056FEEF /* Frameworks */,
@@ -1737,11 +1737,11 @@
 			fileSystemSynchronizedGroups = (
 				DB21989F2E02697D0056FEEF /* NextMetalAppUITests */,
 			);
-			name = NextMetalAppUITests;
+			name = NextMetalUITests;
 			packageProductDependencies = (
 			);
 			productName = NextMetalAppUITests;
-			productReference = DB21989C2E02697D0056FEEF /* NextMetalAppUITests.xctest */;
+			productReference = DB21989C2E02697D0056FEEF /* NextMetalUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -1767,7 +1767,7 @@
 					};
 				};
 			};
-			buildConfigurationList = DB21987C2E02697C0056FEEF /* Build configuration list for PBXProject "NextMetalApp" */;
+			buildConfigurationList = DB21987C2E02697C0056FEEF /* Build configuration list for PBXProject "NextMetal" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1785,9 +1785,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				DB2198802E02697C0056FEEF /* NextMetalApp */,
-				DB2198912E02697D0056FEEF /* NextMetalAppTests */,
-				DB21989B2E02697D0056FEEF /* NextMetalAppUITests */,
+				DB2198802E02697C0056FEEF /* NextMetal */,
+				DB2198912E02697D0056FEEF /* NextMetalTests */,
+				DB21989B2E02697D0056FEEF /* NextMetalUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -1843,12 +1843,12 @@
 /* Begin PBXTargetDependency section */
 		DB2198942E02697D0056FEEF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = DB2198802E02697C0056FEEF /* NextMetalApp */;
+			target = DB2198802E02697C0056FEEF /* NextMetal */;
 			targetProxy = DB2198932E02697D0056FEEF /* PBXContainerItemProxy */;
 		};
 		DB21989E2E02697D0056FEEF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = DB2198802E02697C0056FEEF /* NextMetalApp */;
+			target = DB2198802E02697C0056FEEF /* NextMetal */;
 			targetProxy = DB21989D2E02697D0056FEEF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1991,7 +1991,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = NextMetalNode;
+				INFOPLIST_KEY_CFBundleDisplayName = NextMetal;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2021,7 +2021,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = NextMetalNode;
+				INFOPLIST_KEY_CFBundleDisplayName = NextMetal;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2050,7 +2050,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NextMetalApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NextMetalApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NextMetal.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NextMetal";
 			};
 			name = Debug;
 		};
@@ -2068,7 +2068,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NextMetalApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NextMetalApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NextMetal.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NextMetal";
 			};
 			name = Release;
 		};
@@ -2107,7 +2107,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		DB21987C2E02697C0056FEEF /* Build configuration list for PBXProject "NextMetalApp" */ = {
+		DB21987C2E02697C0056FEEF /* Build configuration list for PBXProject "NextMetal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DB2198A42E02697D0056FEEF /* Debug */,
@@ -2116,7 +2116,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DB2198A62E02697D0056FEEF /* Build configuration list for PBXNativeTarget "NextMetalApp" */ = {
+		DB2198A62E02697D0056FEEF /* Build configuration list for PBXNativeTarget "NextMetal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DB2198A72E02697D0056FEEF /* Debug */,
@@ -2125,7 +2125,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DB2198A92E02697D0056FEEF /* Build configuration list for PBXNativeTarget "NextMetalAppTests" */ = {
+		DB2198A92E02697D0056FEEF /* Build configuration list for PBXNativeTarget "NextMetalTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DB2198AA2E02697D0056FEEF /* Debug */,
@@ -2134,7 +2134,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DB2198AC2E02697D0056FEEF /* Build configuration list for PBXNativeTarget "NextMetalAppUITests" */ = {
+		DB2198AC2E02697D0056FEEF /* Build configuration list for PBXNativeTarget "NextMetalUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DB2198AD2E02697D0056FEEF /* Debug */,
