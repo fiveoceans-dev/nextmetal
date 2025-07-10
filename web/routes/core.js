@@ -24,8 +24,9 @@ function normaliseAddr(a) {
 router.get('/images', async (_req, res, next) => {
   try {
     const { rows } = await db.query(
-      `SELECT name, description, hub_url
+      `SELECT name, description, hub_url, status
          FROM nextmetal.docker_images
+         WHERE status = 1
      ORDER BY name`
     );
     res.json(rows);
