@@ -37,6 +37,7 @@ private struct ImageRow: Decodable {
     let name: String
     let description: String?
     let hub_url: String
+    let status: Int
 }
 
 // MARK: – Model used by the grid
@@ -45,6 +46,7 @@ struct HubImage: Identifiable, Hashable {
     let name: String
     let description: String?
     let hubURL: String
+    let status: Int
 
     /// Extracts `niip42/nextmetal-storage` from full hub_url
     var dockerSlug: String {
@@ -79,11 +81,11 @@ final class DockerViewModel: ObservableObject {
             let rows = try JSONDecoder().decode([ImageRow].self, from: data)
 
             hubImages = rows.map {
-                HubImage(name: $0.name, description: $0.description, hubURL: $0.hub_url)
+                HubImage(name: $0.name, description: $0.description, hubURL: $0.hub_url, status: $0.status)
             }
         } catch {
-            hubImages = ["nginx","redis","mysql","alpine","python"].map {
-                HubImage(name: $0, description: nil, hubURL: "https://hub.docker.com/_/\($0)")
+            hubImages = ["storage","agents","database","functions","dApps", "hosting"].map {
+                HubImage(name: $0, description: nil, hubURL: "https://hub.docker.com/_/\($0)", status: 1)
             }
             errorMessage = "Couldn’t reach catalogue – showing defaults."
         }

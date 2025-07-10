@@ -27,6 +27,7 @@ struct DockerImage: Identifiable, Hashable {
     let repository: String
     let tag: String
     let size: String
+    let status: Int
 }
 
 struct DockerContainer: Identifiable, Hashable {
@@ -47,7 +48,7 @@ struct DockerModel {
         return raw.split(separator: "\n").compactMap { ln in
             let p = ln.split(separator: "\t", omittingEmptySubsequences: false).map(String.init)
             guard p.count == 3 else { return nil }
-            return DockerImage(repository: p[0], tag: p[1], size: p[2])
+            return DockerImage(repository: p[0], tag: p[1], size: p[2], status: 1)
         }
     }
 
