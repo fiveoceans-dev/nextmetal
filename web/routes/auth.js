@@ -128,7 +128,7 @@ api.get('/profile', requireJwt, async (req, res) => {
   try {
     const { rows } = await db.query(
       `SELECT COALESCE(SUM(delta),0)::int AS points
-         FROM nextmetal.points_core
+         FROM nextmetal.points_score
         WHERE user_id = $1`, [req.user.id]);
 
     res.json({ id: req.user.id, email: req.user.email, points: rows[0].points });
