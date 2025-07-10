@@ -10,8 +10,8 @@ struct MainTabView: View {
             DockerView()
                 .tabItem { Label("Docker", systemImage: "shippingbox") }
 
-            WalletView()
-                .tabItem { Label("Wallet", systemImage: "wallet.pass") }
+//            WalletView()
+//                .tabItem { Label("Wallet", systemImage: "wallet.pass") }
 
             RewardsView()
                 .tabItem { Label("Rewards", systemImage: "gift") }

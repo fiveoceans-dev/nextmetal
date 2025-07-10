@@ -26,23 +26,51 @@ function wantsJson(req) {
   );
 }
 
-function issueLogin(req, res) {
+async function issueLogin(req, res) {
   const token = signToken(req.user);
 
-  /* ---------- JSON response (desktop / API) ---------- */
-  if (wantsJson(req)) {
-    return res.json({
-      token,
-      user: { id: req.user.id, email: req.user.email }
-    });
-  }
+  try {
+    // Get user info + points
+    const result = await db.query(`
+      SELECT email, nickname,
+             COALESCE(SUM(p.delta), 0)::int AS points_score
+        FROM nextmetal.users u
+   LEFT JOIN nextmetal.points_core p
+          ON u.id = p.user_id
+       WHERE u.id = $1
+    GROUP BY u.id
+    `, [req.user.id]);
 
-  /* ---------- Browser flow ---------- */
-  setJwtCookie(res, token);                              // secure; http-only
-  const dest = req.session?.returnTo || '/dashboard';    // deep-link
-  if (req.session) delete req.session.returnTo;
-  res.redirect(dest);
+    const user = result.rows[0] ?? {
+      email: req.user.email,
+      nickname: null,
+      points_score: 0
+    };
+
+    /* ---------- JSON response (desktop / API) ---------- */
+    if (wantsJson(req)) {
+      return res.json({
+        token,
+        user: {
+          id: req.user.id,
+          email: user.email,
+          nickname: user.nickname,
+          points_score: user.points_score
+        }
+      });
+    }
+
+    /* ---------- Browser flow ---------- */
+    setJwtCookie(res, token);                              // secure; http-only
+    const dest = req.session?.returnTo || '/dashboard';    // deep-link
+    if (req.session) delete req.session.returnTo;
+    res.redirect(dest);
+  } catch (e) {
+    console.error('[issueLogin]', e);
+    res.status(500).json({ error: 'login-failed' });
+  }
 }
+
 
 /* ───────────────────────── Routers ───────────────────────── */
 const html = express.Router();

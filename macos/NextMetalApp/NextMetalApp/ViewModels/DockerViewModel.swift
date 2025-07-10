@@ -97,19 +97,38 @@ final class DockerViewModel: ObservableObject {
     // MARK: Docker polling
     func refreshAll() async {
         do {
+            // Step 1: Fetch latest image catalogue from server
+            await fetchCatalogue()
+
+            // Step 2: Get local Docker version and state
             version = try await DockerModel.version()
 
             let imgs = try await DockerModel.images()
-            for img in imgs            { state[img.repository] = .downloaded }
-
             let ctrs = try await DockerModel.containers()
-            for c in ctrs where hubImages.map(\.dockerSlug).contains(c.image) {
-                if let match = hubImages.first(where: { $0.dockerSlug == c.image }) {
-                    state[match.name] = .running
+
+            // Step 3: Update state for each image
+            for img in hubImages where img.status == 1 {
+                let name = img.name
+                let slug = img.dockerSlug
+
+                if ctrs.contains(where: { $0.image == slug }) {
+                    state[name] = .running
+                } else if imgs.contains(where: { $0.repository == name }) {
+                    if case let .downloading(progress) = state[name] {
+                        state[name] = .downloading(progress) // Preserve progress
+                    } else {
+                        state[name] = .downloaded
+                    }
+                } else {
+                    state[name] = .remote
                 }
             }
-        } catch { errorMessage = error.localizedDescription }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
+
+
 
     // MARK: UI helpers
     func statusLabel(for name: String) -> String {

@@ -2,11 +2,16 @@
 //  AppUser.swift
 //  NextMetalApp
 //
-// Models/AppUser.swift
 import Foundation
 
-struct AppUser: Decodable {
-    let id     : String
-    let email  : String
-    var points: Int? = nil
+struct AppUser: Decodable, Identifiable {
+    let id: UUID
+    let email: String
+    let nickname: String
+    let pointsScore: Int       // ← camel-cased
+
+    enum CodingKeys: String, CodingKey {
+        case id, email, nickname
+        case pointsScore = "points_score"
+    }
 }
