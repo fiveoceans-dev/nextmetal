@@ -62,12 +62,12 @@ router.post('/images', requireJwt, async (req, res, next) => {
 
   try {
     await db.query(
-      `INSERT INTO nextmetal.docker_images (user_id, name, description, hub_url)
-       VALUES ($1, $2, $3, $4)
+      `INSERT INTO nextmetal.docker_images (user_id, name, description, hub_url, status)
+       VALUES ($1, $2, $3, $4, $5)
        ON CONFLICT (user_id, lower(name))
        DO UPDATE SET description = EXCLUDED.description,
                      hub_url     = EXCLUDED.hub_url`,
-      [req.user.id, name, description ?? '', hub_url]
+      [req.user.id, name, description ?? '', hub_url, 0]
     );
 
     res.json({ ok: true });
@@ -76,10 +76,10 @@ router.post('/images', requireJwt, async (req, res, next) => {
   }
 });
 
-/*────────────────────  Peer-Exchange (PeX)  ─────────────────────*/
+/*────────────────────  Peer-Exchange (Peers)  ─────────────────────*/
 
-// GET /api/core/pex → return up to 50 *approved* peer addresses
-router.get('/pex', requireJwt, async (_req, res, next) => {
+// GET /api/core/peers → return up to 50 *approved* peer addresses
+router.get('/peers', requireJwt, async (_req, res, next) => {
   try {
     const { rows } = await db.query(
       `SELECT address
@@ -94,9 +94,9 @@ router.get('/pex', requireJwt, async (_req, res, next) => {
   }
 });
 
-// POST /api/core/pex → submit new peer addresses for review
+// POST /api/core/peers → submit new peer addresses for review
 // body: { addresses: ["1.2.3.4:30303", …] }
-router.post('/pex', requireJwt, async (req, res, next) => {
+router.post('/peers', requireJwt, async (req, res, next) => {
   try {
     const raw = Array.isArray(req.body.addresses) ? req.body.addresses : [];
     const clean = raw.map(normaliseAddr).filter(Boolean);
