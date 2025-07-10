@@ -31,8 +31,6 @@ router.get('/profile', requireJwt, async (req, res, next) => {
       [req.user.id]
     );
 
-    if (!rows.length) return res.status(404).json({ error: 'not-found' });
-
     res.json(rows[0]);
   } catch (err) {
     next(err);

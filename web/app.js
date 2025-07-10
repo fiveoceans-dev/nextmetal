@@ -34,7 +34,6 @@ if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);
 }
 
-
 /* global hardening and logs */
 app.use(helmet());
 app.use(morgan('tiny'));
