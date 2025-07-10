@@ -19,21 +19,25 @@ function normaliseAddr(a) {
 
 /*────────────────────  Docker image catalogue  ────────────────────*/
 // GET /api/core/images → public catalogue
-router.get('/images', async (_req, res, next) => {
+router.get('/images', async (req, res, next) => {
   try {
+    const showAll = req.query.all === '1';
+
     const { rows } = await db.query(
       `SELECT name, description, hub_url, status
          FROM nextmetal.docker_images
         WHERE ($1::bool IS TRUE)
           OR status = 1
-      ORDER BY name`,
-        [req.query.all === '1']
+        ORDER BY name`,
+      [showAll]
     );
+
     res.json(rows);
   } catch (err) {
     next(err);
   }
 });
+
 
 // GET /api/core/images/:name → full metadata (single image)
 router.get('/images/:name', async (req, res, next) => {
