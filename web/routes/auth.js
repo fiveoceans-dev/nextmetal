@@ -126,18 +126,5 @@ html.get('/logout', (_req, res) => {
   res.redirect('/');
 });
 
-/* ----------  Protected profile API ---------- */
-api.get('/profile', requireJwt, async (req, res) => {
-  try {
-    const userRow = await fetchUserRow(req.user.id);
-    if (!userRow) return res.status(404).json({ error: 'not-found' });
-
-    return res.json({ user: toApiUser({ id: req.user.id, ...userRow }) });
-  } catch (err) {
-    console.error('[profile]', err);
-    return res.status(500).json({ error: 'server-error' });
-  }
-});
-
 /* ───────────────────────── exports ───────────────────────── */
 module.exports = { html, api, requireJwt };

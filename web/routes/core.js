@@ -17,6 +17,7 @@ function normaliseAddr(a) {
   return /^[\w.\-]+:\d+$/.test(s) ? s : null;
 }
 
+
 /*────────────────────  Docker image catalogue  ────────────────────*/
 // GET /api/core/profile → return basic user info
 // curl -X GET http://localhost:3001/api/core/profile \
@@ -37,6 +38,7 @@ router.get('/profile', requireJwt, async (req, res, next) => {
     next(err);
   }
 });
+
 
 /*────────────────────  Docker image catalogue  ────────────────────*/
 // GET /api/core/images → public catalogue
@@ -78,6 +80,7 @@ router.get('/images/:name', async (req, res, next) => {
   }
 });
 
+
 // POST /api/core/images → submit new image
 router.post('/images', requireJwt, async (req, res, next) => {
   const { name, description, hub_url, status = 0 } = req.body;
@@ -101,6 +104,7 @@ router.post('/images', requireJwt, async (req, res, next) => {
   }
 });
 
+
 /*────────────────────  Peer-Exchange (Peers)  ─────────────────────*/
 // GET /api/core/peers → up to 50 approved peers
 router.get('/peers', requireJwt, async (_req, res, next) => {
@@ -117,6 +121,7 @@ router.get('/peers', requireJwt, async (_req, res, next) => {
     next(err);
   }
 });
+
 
 // POST /api/core/peers → submit new peer addresses
 router.post('/peers', requireJwt, async (req, res, next) => {
