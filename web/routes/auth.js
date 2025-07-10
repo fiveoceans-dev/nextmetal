@@ -1,15 +1,18 @@
-/* routes/auth.js --------------------------------------------------------- */
+/* ──────────────────────────────────────────────────────────
+   routes/auth.js   – shared HTML + JSON auth endpoints
+   ────────────────────────────────────────────────────────── */
 require('dotenv').config();
 
-const express   = require('express');
-const passport  = require('passport');
-const bcrypt    = require('bcryptjs');
+const express     = require('express');
+const passport    = require('passport');
+const bcrypt      = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 
 const {
-  signToken,          // utils/jwt.js  →  jwt.sign({ uid }, secret)
-  setJwtCookie,       // utils/jwt.js  →  res.cookie(cookieName, token , …)
-  requireJwt          // utils/jwt.js  →  bearer-or-cookie auth
+  signToken,
+  setJwtCookie,
+  requireJwt,
+  cookieName            // exported from middleware/jwt.js
 } = require('../middleware/jwt');
 
 const User            = require('../models/user');
@@ -20,77 +23,78 @@ const { generateWallet } = require('../utils/wallet');
 
 function wantsJson(req) {
   return (
-    'json' in req.query ||                               //   /login?json
-    req.get('x-client') === 'desktop' ||                 //   custom header
-    req.accepts(['json', 'html']) === 'json'             //   Accept: application/json
+    'json' in req.query ||
+    (req.get('x-client') || '').toLowerCase() === 'desktop' ||
+    (req.accepts(['json', 'html']) || '') === 'json'
   );
+}
+
+async function fetchUserRow(id) {
+  const { rows } = await db.query(
+    `SELECT email, nickname, total_points
+       FROM nextmetal.users
+      WHERE id = $1`,
+    [id]
+  );
+  return rows[0];
+}
+
+function toApiUser(u, fallbackEmail) {
+  return {
+    id:           u?.id,
+    email:        u?.email       ?? fallbackEmail,
+    nickname:     u?.nickname    ?? null,
+    points_score: u?.total_points ?? 0
+  };
 }
 
 async function issueLogin(req, res) {
   const token = signToken(req.user);
 
   try {
-    const result = await db.query(`
-      SELECT email, nickname, total_points
-        FROM nextmetal.users
-       WHERE id = $1
-    `, [req.user.id]);
+    const userRow = await fetchUserRow(req.user.id);
 
-    const user = result.rows[0] ?? {
-      email: req.user.email,
-      nickname: null,
-      total_points: 0
-    };
-
-    // JSON for macOS/Desktop/API clients
+    // ── Desktop / API clients ─────────────────────────────────
     if (wantsJson(req)) {
-      return res.json({
-        token,
-        user: {
-          id: req.user.id,
-          email: user.email,
-          nickname: user.nickname,
-          points_score: user.total_points   // ← renamed field for compatibility
-        }
-      });
+      return res.json({ token, user: toApiUser({ id: req.user.id, ...userRow }) });
     }
 
-    // Cookie login flow (browser)
+    // ── Browser flow (cookie + redirect) ──────────────────────
     setJwtCookie(res, token);
     const dest = req.session?.returnTo || '/dashboard';
     if (req.session) delete req.session.returnTo;
-    res.redirect(dest);
-  } catch (e) {
-    console.error('[issueLogin]', e);
-    res.status(500).json({ error: 'login-failed' });
+    return res.redirect(dest);
+  } catch (err) {
+    console.error('[issueLogin]', err);
+    return res.status(500).json({ error: 'login-failed' });
   }
 }
 
-
-
 /* ───────────────────────── Routers ───────────────────────── */
 const html = express.Router();
-const api  = express.Router();            // exported (desktop uses /api/auth)
+const api  = express.Router();          // prefix mounted at /api/auth
 
-/* ----------  Registration (HTML form)  ---------- */
-html.post('/register', async (req, res, next) => {
+/* ----------  Registration (HTML)  ---------- */
+html.post('/register', async (req, res) => {
   try {
     const email = (req.body.email ?? '').trim().toLowerCase();
     const pass  = req.body.password ?? '';
 
-    if (!email || !pass)
+    if (!email || !pass) {
       return res.redirect('/members?error=Missing+credentials');
+    }
 
-    /* 1Existing user → fall back to login */
+    /* 1.  Existing account →  login  */
     try {
-      const u = await User.findByEmail(email);
-      if (!(await bcrypt.compare(pass, u.password_hash)))
+      const existing = await User.findByEmail(email);
+      if (!(await bcrypt.compare(pass, existing.password_hash))) {
         return res.redirect('/members?error=Incorrect+password');
-      req.user = u;
+      }
+      req.user = existing;
       return issueLogin(req, res);
-    } catch { /* not found – continue */ }
+    } catch { /* fall through – not found */ }
 
-    /* 2Create brand-new user */
+    /* 2.  Brand-new account  */
     const { address, encryptedPrivateKey } = await generateWallet(pass);
 
     req.user = await User.create({
@@ -101,40 +105,38 @@ html.post('/register', async (req, res, next) => {
       encPrivKey:  encryptedPrivateKey
     });
 
-    issueLogin(req, res);
-  } catch (e) {
-    console.error('[register]', e);
-    res.redirect('/members?error=Registration+failed');
+    return issueLogin(req, res);
+  } catch (err) {
+    console.error('[register]', err);
+    return res.redirect('/members?error=Registration+failed');
   }
 });
 
-/* ----------  Login (shared handler)  ---------- */
+/* ----------  Login (shared handler) ---------- */
 const localAuth = passport.authenticate('local', {
   session: false,
   failureRedirect: '/members?error=Invalid+credentials'
 });
 
 html.post('/login', localAuth, issueLogin);
-api .post('/login', localAuth, issueLogin);   // desktop hits  /api/auth/login
+api .post('/login', localAuth, issueLogin);
 
-/* ----------  Logout (HTML)  ---------- */
+/* ----------  Logout (HTML) ---------- */
 html.get('/logout', (_req, res) => {
-  res.clearCookie(require('../middleware/jwt').cookieName);
+  res.clearCookie(cookieName);
   res.redirect('/');
 });
 
 /* ----------  Protected profile API ---------- */
 api.get('/profile', requireJwt, async (req, res) => {
   try {
-    const { rows } = await db.query(
-      `SELECT COALESCE(SUM(delta),0)::int AS points
-         FROM nextmetal.points_score
-        WHERE user_id = $1`, [req.user.id]);
+    const userRow = await fetchUserRow(req.user.id);
+    if (!userRow) return res.status(404).json({ error: 'not-found' });
 
-    res.json({ id: req.user.id, email: req.user.email, points: rows[0].points });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: 'server-error' });
+    return res.json({ user: toApiUser({ id: req.user.id, ...userRow }) });
+  } catch (err) {
+    console.error('[profile]', err);
+    return res.status(500).json({ error: 'server-error' });
   }
 });
 

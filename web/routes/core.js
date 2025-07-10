@@ -24,8 +24,10 @@ router.get('/images', async (_req, res, next) => {
     const { rows } = await db.query(
       `SELECT name, description, hub_url, status
          FROM nextmetal.docker_images
-        WHERE status = 1
-     ORDER BY name`
+        WHERE ($1::bool IS TRUE)
+          OR status = 1
+      ORDER BY name`,
+        [req.query.all === '1']
     );
     res.json(rows);
   } catch (err) {
@@ -53,7 +55,7 @@ router.get('/images/:name', async (req, res, next) => {
 
 // POST /api/core/images → submit new image
 router.post('/images', requireJwt, async (req, res, next) => {
-  const { name, description, hub_url } = req.body;
+  const { name, description, hub_url, status = 0 } = req.body;
 
   if (!name || !hub_url)
     return res.status(400).json({ error: 'missing-fields' });
@@ -65,7 +67,7 @@ router.post('/images', requireJwt, async (req, res, next) => {
        ON CONFLICT (user_id, lower(name))
        DO UPDATE SET description = EXCLUDED.description,
                      hub_url     = EXCLUDED.hub_url`,
-      [req.user.id, name, description ?? '', hub_url, 0]
+      [req.user.id, name, description ?? '', hub_url, status]
     );
 
     res.json({ ok: true });
