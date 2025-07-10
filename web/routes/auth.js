@@ -20,7 +20,6 @@ const db              = require('../utils/db');
 const { generateWallet } = require('../utils/wallet');
 
 /* ───────────────────────── helpers ───────────────────────── */
-
 function wantsJson(req) {
   return (
     'json' in req.query ||
@@ -44,7 +43,7 @@ function toApiUser(u, fallbackEmail) {
     id:           u?.id,
     email:        u?.email       ?? fallbackEmail,
     nickname:     u?.nickname    ?? null,
-    points_score: u?.total_points ?? 0
+    total_points: u?.total_points ?? 0
   };
 }
 
@@ -72,7 +71,7 @@ async function issueLogin(req, res) {
 
 /* ───────────────────────── Routers ───────────────────────── */
 const html = express.Router();
-const api  = express.Router();          // prefix mounted at /api/auth
+const api  = express.Router();
 
 /* ----------  Registration (HTML)  ---------- */
 html.post('/register', async (req, res) => {
