@@ -1,3 +1,5 @@
+// middleware/isAuthenticated.js
+
 module.exports = function isAuthenticated (req, res, next) {
     /* passport adds the fn only after it’s initialised */
     const loggedIn = req.isAuthenticated && req.isAuthenticated();

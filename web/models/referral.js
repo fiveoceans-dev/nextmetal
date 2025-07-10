@@ -1,3 +1,4 @@
+// model.exports = {
 const db = require('../utils/db');
 
 const Referral = {
@@ -23,7 +24,6 @@ const Referral = {
 
   // Use a referral code (record usage)
   async useCode({ userId, code }) {
-    // Find the referral_codes.id by code string first
     const codeRes = await db.query(
       `SELECT id FROM nextmetal.referral_codes WHERE code = $1`,
       [code]
@@ -52,18 +52,17 @@ const Referral = {
 
   // Count usages of a given referral code
   async getUsageCount(code) {
-    // Count usages by joining on code string
     const codeRes = await db.query(
       `SELECT id FROM nextmetal.referral_codes WHERE code = $1`,
       [code]
     );
-    if (codeRes.rows.length === 0) {
-      return 0;
-    }
+    if (codeRes.rows.length === 0) return 0;
+
     const referralCodeId = codeRes.rows[0].id;
 
     const result = await db.query(
-      `SELECT COUNT(*)::INT AS count FROM nextmetal.referral_usages
+      `SELECT COUNT(*)::INT AS count
+       FROM nextmetal.referral_usages
        WHERE referral_code_id = $1`,
       [referralCodeId]
     );
@@ -74,9 +73,10 @@ const Referral = {
   async findAllByOwner(ownerId) {
     const result = await db.query(
       `SELECT r.*,
-              COUNT(ru.id) AS used_count
+              COUNT(ru.id)::INT AS used_count
          FROM nextmetal.referral_codes r
-         LEFT JOIN nextmetal.referral_usages ru ON ru.referral_code_id = r.id
+         LEFT JOIN nextmetal.referral_usages ru
+           ON ru.referral_code_id = r.id
         WHERE r.owner_id = $1
         GROUP BY r.id`,
       [ownerId]

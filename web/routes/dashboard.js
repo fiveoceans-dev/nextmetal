@@ -11,7 +11,7 @@ const TITLE   = 'Next Metal – ';
 async function getBalance(userId) {
   const { rows } = await db.query(
     `SELECT COALESCE(SUM(delta),0)::INT AS balance
-       FROM nextmetal.points_core
+       FROM nextmetal.points_score
       WHERE user_id = $1`,
     [userId],
   );
@@ -22,7 +22,7 @@ async function getBalance(userId) {
 async function getLedger(userId, limit = 20) {
   const { rows } = await db.query(
     `SELECT type, delta, created_at
-       FROM nextmetal.points_core
+       FROM nextmetal.points_score
       WHERE user_id = $1
       ORDER BY created_at DESC
       LIMIT  $2`,

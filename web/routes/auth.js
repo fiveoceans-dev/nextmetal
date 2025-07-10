@@ -30,24 +30,19 @@ async function issueLogin(req, res) {
   const token = signToken(req.user);
 
   try {
-    // Get user info + points
     const result = await db.query(`
-      SELECT email, nickname,
-             COALESCE(SUM(p.delta), 0)::int AS points_score
-        FROM nextmetal.users u
-   LEFT JOIN nextmetal.points_core p
-          ON u.id = p.user_id
-       WHERE u.id = $1
-    GROUP BY u.id
+      SELECT email, nickname, total_points
+        FROM nextmetal.users
+       WHERE id = $1
     `, [req.user.id]);
 
     const user = result.rows[0] ?? {
       email: req.user.email,
       nickname: null,
-      points_score: 0
+      total_points: 0
     };
 
-    /* ---------- JSON response (desktop / API) ---------- */
+    // JSON for macOS/Desktop/API clients
     if (wantsJson(req)) {
       return res.json({
         token,
@@ -55,14 +50,14 @@ async function issueLogin(req, res) {
           id: req.user.id,
           email: user.email,
           nickname: user.nickname,
-          points_score: user.points_score
+          points_score: user.total_points   // ← renamed field for compatibility
         }
       });
     }
 
-    /* ---------- Browser flow ---------- */
-    setJwtCookie(res, token);                              // secure; http-only
-    const dest = req.session?.returnTo || '/dashboard';    // deep-link
+    // Cookie login flow (browser)
+    setJwtCookie(res, token);
+    const dest = req.session?.returnTo || '/dashboard';
     if (req.session) delete req.session.returnTo;
     res.redirect(dest);
   } catch (e) {
@@ -70,6 +65,7 @@ async function issueLogin(req, res) {
     res.status(500).json({ error: 'login-failed' });
   }
 }
+
 
 
 /* ───────────────────────── Routers ───────────────────────── */
@@ -85,7 +81,7 @@ html.post('/register', async (req, res, next) => {
     if (!email || !pass)
       return res.redirect('/members?error=Missing+credentials');
 
-    /* 1️⃣ Existing user → fall back to login */
+    /* 1Existing user → fall back to login */
     try {
       const u = await User.findByEmail(email);
       if (!(await bcrypt.compare(pass, u.password_hash)))
@@ -94,7 +90,7 @@ html.post('/register', async (req, res, next) => {
       return issueLogin(req, res);
     } catch { /* not found – continue */ }
 
-    /* 2️⃣ Create brand-new user */
+    /* 2Create brand-new user */
     const { address, encryptedPrivateKey } = await generateWallet(pass);
 
     req.user = await User.create({
