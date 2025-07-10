@@ -18,6 +18,27 @@ function normaliseAddr(a) {
 }
 
 /*────────────────────  Docker image catalogue  ────────────────────*/
+// GET /api/core/profile → return basic user info
+// curl -X GET http://localhost:3001/api/core/profile \
+//  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+router.get('/profile', requireJwt, async (req, res, next) => {
+  try {
+    const { rows } = await db.query(
+      `SELECT nickname, email, total_points
+         FROM nextmetal.users
+        WHERE id = $1`,
+      [req.user.id]
+    );
+
+    if (!rows.length) return res.status(404).json({ error: 'not-found' });
+
+    res.json(rows[0]);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/*────────────────────  Docker image catalogue  ────────────────────*/
 // GET /api/core/images → public catalogue
 router.get('/images', async (req, res, next) => {
   try {
