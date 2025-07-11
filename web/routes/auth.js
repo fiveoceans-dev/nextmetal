@@ -12,7 +12,7 @@ const {
   signToken,
   setJwtCookie,
   requireJwt,
-  cookieName            // exported from middleware/jwt.js
+  cookieName
 } = require('../middleware/jwt');
 
 const User            = require('../models/user');

@@ -1,28 +1,26 @@
 // routes/core.js  ───────────────────────────────────────────────
-// Public catalogue  +  Peer-Exchange JSON API
+// Public Docker catalogue + Peer Exchange + Basic Profile API
 // --------------------------------------------------------------
 require('dotenv').config();
 
 const express = require('express');
 const db = require('../utils/db');
-const { requireJwt } = require('./auth'); // exported by routes/auth.js
+const { requireJwt, requireJwtPage } = require('../middleware/jwt');
 
 const router = express.Router();
 
-/*────────────────────────────── helpers ──────────────────────────────*/
-// Very light sanity-check: "host-or-ip:port"
+/*─────────────────────── Utilities ─────────────────────────────*/
+// Very light format check for peer addresses (host:port)
 function normaliseAddr(a) {
   if (typeof a !== 'string') return null;
   const s = a.trim();
   return /^[\w.\-]+:\d+$/.test(s) ? s : null;
 }
 
-
-/*────────────────────  Docker image catalogue  ────────────────────*/
-// GET /api/core/profile → return basic user info
-// curl -X GET http://localhost:3001/api/core/profile \
-//  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+/*─────────────────────── Profile API ───────────────────────────*/
+// GET /api/core/profile → Basic user info (nickname, email, points)
 router.get('/profile', requireJwt, async (req, res, next) => {
+  res.type('application/json'); // force JSON content-type
   try {
     const { rows } = await db.query(
       `SELECT nickname, email, total_points
@@ -31,6 +29,10 @@ router.get('/profile', requireJwt, async (req, res, next) => {
       [req.user.id]
     );
 
+    if (!rows.length) {
+      return res.status(404).json({ error: 'not-found' });
+    }
+
     res.json(rows[0]);
   } catch (err) {
     next(err);
@@ -38,8 +40,8 @@ router.get('/profile', requireJwt, async (req, res, next) => {
 });
 
 
-/*────────────────────  Docker image catalogue  ────────────────────*/
-// GET /api/core/images → public catalogue
+/*──────────────── Docker Image Catalogue API ──────────────────*/
+// GET /api/core/images → Public (or all) Docker image catalogue
 router.get('/images', async (req, res, next) => {
   try {
     const showAll = req.query.all === '1';
@@ -48,7 +50,7 @@ router.get('/images', async (req, res, next) => {
       `SELECT name, description, hub_url, status
          FROM nextmetal.docker_images
         WHERE ($1::bool IS TRUE)
-          OR status = 1
+           OR status = 1
         ORDER BY name`,
       [showAll]
     );
@@ -59,8 +61,7 @@ router.get('/images', async (req, res, next) => {
   }
 });
 
-
-// GET /api/core/images/:name → full metadata (single image)
+// GET /api/core/images/:name → Full metadata for one image
 router.get('/images/:name', async (req, res, next) => {
   try {
     const { rows } = await db.query(
@@ -70,16 +71,17 @@ router.get('/images/:name', async (req, res, next) => {
         LIMIT 1`,
       [req.params.name]
     );
-    rows.length
-      ? res.json(rows[0])
-      : res.status(404).json({ error: 'not-found' });
+
+    if (!rows.length)
+      return res.status(404).json({ error: 'not-found' });
+
+    res.json(rows[0]);
   } catch (err) {
     next(err);
   }
 });
 
-
-// POST /api/core/images → submit new image
+// POST /api/core/images → Submit or update an image (auth required)
 router.post('/images', requireJwt, async (req, res, next) => {
   const { name, description, hub_url, status = 0 } = req.body;
 
@@ -102,9 +104,8 @@ router.post('/images', requireJwt, async (req, res, next) => {
   }
 });
 
-
-/*────────────────────  Peer-Exchange (Peers)  ─────────────────────*/
-// GET /api/core/peers → up to 50 approved peers
+/*───────────────────── Peer Exchange API ──────────────────────*/
+// GET /api/core/peers → Up to 50 approved peers (auth required)
 router.get('/peers', requireJwt, async (_req, res, next) => {
   try {
     const { rows } = await db.query(
@@ -114,14 +115,14 @@ router.get('/peers', requireJwt, async (_req, res, next) => {
      ORDER BY random()
         LIMIT 50`
     );
+
     res.json(rows.map(r => r.address));
   } catch (err) {
     next(err);
   }
 });
 
-
-// POST /api/core/peers → submit new peer addresses
+// POST /api/core/peers → Submit new peer addresses (auth required)
 router.post('/peers', requireJwt, async (req, res, next) => {
   try {
     const raw = Array.isArray(req.body.addresses) ? req.body.addresses : [];
