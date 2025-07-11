@@ -6,7 +6,6 @@ require('dotenv').config();
 const express = require('express');
 const db = require('../utils/db');
 const { requireJwt, requireJwtPage } = require('../middleware/jwt');
-
 const router = express.Router();
 
 /*─────────────────────── Utilities ─────────────────────────────*/
@@ -21,6 +20,8 @@ function normaliseAddr(a) {
 // GET /api/core/profile → Basic user info (nickname, email, points)
 router.get('/profile', requireJwt, async (req, res, next) => {
   res.type('application/json'); // force JSON content-type
+  console.log("Authorization Header:", req.headers.authorization);
+
   try {
     const { rows } = await db.query(
       `SELECT nickname, email, total_points
