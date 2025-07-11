@@ -27,10 +27,13 @@ const setJwtCookie = (res, token) => {
   Authorization: Bearer <token>
 ──────────────────────────────────────────────────────────────────────────*/
 const requireJwt = async (req, res, next) => {
+  console.log("Authorization Header:", req.headers.authorization); // <-- ADD THIS
+
   const header = req.headers.authorization || '';
   const token = header.startsWith('Bearer ') ? header.slice(7) : null;
 
   if (!token) {
+    console.warn("JWT MISSING – header was:", header); // <-- ADD THIS
     return res.status(401).json({ error: 'missing-token' });
   }
 
@@ -42,9 +45,11 @@ const requireJwt = async (req, res, next) => {
     req.user = user;
     next();
   } catch (err) {
+    console.warn("JWT INVALID –", err.message);
     return res.status(401).json({ error: 'invalid-token' });
   }
 };
+
 
 /*────────────────── Web Middleware (Cookie-based) ──────────────────
   For traditional pages that store JWT in an HTTP-only cookie
