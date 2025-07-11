@@ -19,14 +19,13 @@ function normaliseAddr(a) {
 /*─────────────────────── Profile API ───────────────────────────*/
 // GET /api/core/profile → Basic user info (nickname, email, points)
 
-
-router.get('/profile', requireJwt, async (req, res, next) => {
+router.get('/profile', async (req, res, next) => {
   res.type('application/json'); // force JSON content-type
   console.log("Authorization Header:", req.headers.authorization);
 
   try {
     const { rows } = await db.query(
-      `SELECT nickname, email, total_points
+      `SELECT nickname, total_points
          FROM nextmetal.users
         WHERE id = $1`,
       [req.user.id]
