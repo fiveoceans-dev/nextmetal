@@ -1,9 +1,8 @@
 // middleware/jwt.js
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-
-const cookieName = 'nmjwt';
 const JWT_SECRET = process.env.JWT_SECRET;
+const cookieName = 'nmjwt';
 
 if (!JWT_SECRET) {
   throw new Error('JWT_SECRET environment variable is required');
@@ -28,8 +27,8 @@ const setJwtCookie = (res, token) => {
   Authorization: Bearer <token>
 ──────────────────────────────────────────────────────────────────────────*/
 const requireJwt = async (req, res, next) => {
-  const authHeader = req.headers.authorization || '';
-  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+  const header = req.headers.authorization || '';
+  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
 
   if (!token) {
     return res.status(401).json({ error: 'missing-token' });
@@ -38,9 +37,7 @@ const requireJwt = async (req, res, next) => {
   try {
     const { uid } = jwt.verify(token, JWT_SECRET);
     const user = await User.findById(uid);
-    if (!user) {
-      return res.status(401).json({ error: 'user-not-found' });
-    }
+    if (!user) throw new Error('user-not-found');
 
     req.user = user;
     next();
